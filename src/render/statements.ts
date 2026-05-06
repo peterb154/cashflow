@@ -4,11 +4,9 @@ import {
   cashInterestIncome,
   debtPayments,
   monthlyCashFlow,
-  monthlyTimeCapacity,
   netWorth,
   obligatedTime,
   state,
-  timeUsageRows,
   totalDebt,
   totalPassiveIncome,
 } from '../state';
@@ -24,17 +22,7 @@ function renderRows(rows: Array<[string, string]>): string {
 }
 
 function renderIncomeStatement(): string {
-  const timeRows: Array<[string, string]> = timeUsageRows().map(([label, amount]) => [
-    `Time use: ${label}`,
-    `-${amount}/10 units`,
-  ]);
   const rows: Array<[string, string]> = [
-    ['Time inventory', ''],
-    ['Monthly time budget', `${state.baseTime}/10 units`],
-    ...timeRows,
-    ['Time already obligated', `-${obligatedTime()}/10 units`],
-    ['Usable time this month', `${monthlyTimeCapacity()}/10 units`],
-    ['Cash P&L', ''],
     ['Active income', money(state.activeIncome)],
     ['Asset passive income', money(state.passiveIncome)],
     ['Cash interest income (8% APY)', money(cashInterestIncome())],
