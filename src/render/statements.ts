@@ -45,15 +45,23 @@ function renderIncomeStatement(): string {
 }
 
 function renderBalanceSheet(): string {
-  const rows: Array<[string, string]> = [
-    ['Cash', money(state.cash)],
-    ['Asset value', money(assetValue())],
+  const rows: Array<[string, string]> = [['Cash', money(state.cash)]];
+  if (state.assets.length) {
+    rows.push(['Assets', '']);
+    for (const asset of state.assets) {
+      rows.push([`· ${asset.name}`, money(asset.value)]);
+    }
+    rows.push(['Total asset value', money(assetValue())]);
+  } else {
+    rows.push(['Asset value', money(assetValue())]);
+  }
+  rows.push(
     ['Total debt', `-${money(totalDebt())}`],
     ['Net worth', money(netWorth())],
     ['Free time inventory', `${state.time}/10 units`],
     ['Obligated time liability', `-${obligatedTime()}/10 units`],
     ['Business skill asset', `${state.skill}/10`],
-  ];
+  );
   return renderRows(rows);
 }
 
