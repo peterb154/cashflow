@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "changelog": "bash scripts/generate-changelog.sh"
+    "changelog:draft": "bash scripts/generate-changelog.sh"
   },
   "devDependencies": {
     "typescript": "^5.7.0",

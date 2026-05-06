@@ -1,4 +1,5 @@
 node_modules/
+CHANGELOG.draft.md
 dist/
 .DS_Store
 *.log

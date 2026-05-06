@@ -1,29 +1,51 @@
 # Changelog
 
-Generated from git history. Run `pnpm changelog` to refresh.
+What's changed in the game. New mechanics, balance shifts, and content additions — written for players, not git.
 
-## 2026-05-06
+## 2026-05-06 — Initial public release
 
-- chore: exclude bot CHANGELOG-refresh commits from generated changelog (`c9e685b`)
-- fix: most life events are now required (can't be deferred) (`3c90089`)
-- refactor: label whisper as Inner Voice, hearts show 5/5 always (`a8afec8`)
-- feat: doodads gain a whisper, hearts, and 8 new temptations (`06bbb32`)
-- feat: bell-curve opportunity distribution (22 -> 53 cards) (`79521fa`)
-- feat: pre-roll family on the picker, with re-roll button (`51894d4`)
-- refactor: drop prototype framing from user-facing copy (`a9425f8`)
-- docs: note CHANGELOG is auto-refreshed by CI (`d25c72f`)
-- ci: auto-refresh CHANGELOG.md after each deploy (`4f358d0`)
-- feat: only truly passive income counts toward FIRE (`2a2b3ce`)
-- refactor: profile audit cleanup + balance tuning (`ebf4ba9`)
-- docs: add CHANGELOG generated from git history (`5a9b433`)
-- feat: cap monthly actions at one (or none) (`b090dd6`)
-- feat: trade hours for time (`be7d81c`)
-- refactor: explain kid time math in time accounting (`fbb92cf`)
-- refactor: drop duplicate time inventory from P&L tab (`e71d818`)
-- feat: add life picker (`fb6547a`)
-- docs: add README (`386eb75`)
-- chore(1): configure custom domain cashflow.epetersons.com (`cbe3f59`)
-- test(1): add Vitest regression suite + GH Pages workflow (`337fa90`)
-- feat(1): port prototype to TypeScript modules (`609150a`)
-- chore(1): scaffold Vite + TypeScript (`e3954db`)
+The first playable version, live at [cashflow.epetersons.com](https://cashflow.epetersons.com/).
 
+### Core rules
+
+- **FIRE win condition.** You win when *truly passive* income (assets with no monthly time obligation + cash interest) covers your monthly expenses. Time-consuming businesses earn cash but don't count toward FIRE — until you systematize them down to zero recurring time.
+- **One action per month.** Each month you take exactly one levered action (debt snowball, cut expenses, build skill, sell asset, systematize, reduce hours, take more hours) or none. Then close the month.
+- **Hours trade.** Reduce your work hours to gain monthly free time at proportional income loss; take more hours to do the reverse. Permanent until you change it again.
+- **Required life events.** Emergencies, bills, repairs, layoffs, and parent-needs-help can't be deferred. Real choices (job offers, promotions) still can be.
+
+### Family & time
+
+- 10-unit monthly time budget. Job, family obligations, and recurring business work draw it down.
+- Single parents bear **3 time units per kid**; married parents bear **1.5 each** (the math is honest: a couple together does 3, a single parent does that 3 alone).
+
+### Starting lives
+
+- 12 profiles spanning a $2,100/mo barista to a $14,200/mo doctor with $332k of debt. Each has its own asymmetry — some carry crushing student loans, some have passive income from VA disability, some start with no time at all.
+- "Browse lives" lets you preview each one. Family is pre-rolled on the card, re-rollable per profile, and locked in when you choose.
+
+### Opportunity deck
+
+- 53 cards spanning skill 0–10, distributed in a rough bell curve so high-skill players have things to do and low-skill players can see what they're growing into. Locked cards display their skill requirement.
+- Categories: index funds, vending, route businesses, agencies, real estate, SaaS, e-commerce, syndications, mature acquisitions, and a $250k search-fund acquisition for the late game.
+
+### Doodad temptations
+
+- 19 cards covering car upgrades, lifestyle inflation, status purchases, family pulls, and modern subscription creep.
+- Each card carries an **Inner Voice** — the whisper that justifies the spend ("Your father will finally be proud", "Think of the Insta likes", "You've worked hard, you deserve it"). The lesson at the bottom contradicts it.
+- Each card shows a **happiness rating** in hearts (1–5). The hearts are deliberately not tracked — they don't aggregate, don't gate anything, don't move FIRE. They're bait that mirrors how real consumer purchases dangle "this will make me happier" without ever delivering measurable joy.
+
+### Life events
+
+- 14 cards: emergencies, bonuses, repairs, rent rises, insurance hikes, tax refunds, layoff scares, marriages, divorces, new babies, childcare gaps, parent-needs-help, referrals, promotions.
+- Most are required — life happens to you. Two are real choices.
+
+### Statements
+
+- Income statement (P&L) splits asset income into "needs time" vs "truly passive" so you can see what's pulling toward FIRE vs what's just earning cash.
+- Time accounting panel breaks down where the 10 monthly units go, with kid math made explicit (e.g. "2 kids × 3 time/kid (single parent — no spouse to split)").
+- Balance sheet, debt list, and FIRE progress.
+
+### Quality of life
+
+- Light/dark theme toggle.
+- `?seed=` URL parameter for reproducible playthroughs.
