@@ -4,6 +4,8 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- feat: doodads gain a whisper, hearts, and 8 new temptations (`06bbb32`)
+- chore: refresh CHANGELOG [skip ci] (`37ecb9f`)
 - feat: bell-curve opportunity distribution (22 -> 53 cards) (`79521fa`)
 - chore: refresh CHANGELOG [skip ci] (`06cd3bf`)
 - feat: pre-roll family on the picker, with re-roll button (`51894d4`)
