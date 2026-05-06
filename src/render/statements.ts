@@ -1,14 +1,16 @@
 import { money, percent } from '../format';
 import {
+  activeAssetIncome,
   assetValue,
   cashInterestIncome,
   debtPayments,
   monthlyCashFlow,
   netWorth,
   obligatedTime,
+  passiveAssetIncome,
   state,
   totalDebt,
-  totalPassiveIncome,
+  truePassiveIncome,
 } from '../state';
 
 function renderRows(rows: Array<[string, string]>): string {
@@ -22,15 +24,23 @@ function renderRows(rows: Array<[string, string]>): string {
 }
 
 function renderIncomeStatement(): string {
+  const activeAsset = activeAssetIncome();
+  const passiveAsset = passiveAssetIncome();
+  const cashInterest = cashInterestIncome();
   const rows: Array<[string, string]> = [
-    ['Active income', money(state.activeIncome)],
-    ['Asset passive income', money(state.passiveIncome)],
-    ['Cash interest income (8% APY)', money(cashInterestIncome())],
-    ['Total passive income', money(totalPassiveIncome())],
+    ['Active income (job)', money(state.activeIncome)],
+  ];
+  if (activeAsset > 0) {
+    rows.push(['Asset income — needs time', money(activeAsset)]);
+  }
+  rows.push(
+    ['Asset income — truly passive', money(passiveAsset)],
+    ['Cash interest (8% APY)', money(cashInterest)],
     ['Living expenses', `-${money(state.expenses)}`],
     ['Debt payments', `-${money(debtPayments())}`],
     ['Net monthly cash flow', money(monthlyCashFlow())],
-  ];
+    ['Counts toward FIRE', money(truePassiveIncome())],
+  );
   return renderRows(rows);
 }
 

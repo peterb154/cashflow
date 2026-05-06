@@ -108,8 +108,24 @@ export function cashInterestIncome(): number {
   return Math.floor((state.cash * CASH_INTEREST_APY) / 12);
 }
 
+export function passiveAssetIncome(): number {
+  return state.assets
+    .filter((asset) => (asset.recurringTime ?? 0) === 0)
+    .reduce((sum, asset) => sum + asset.passive, 0);
+}
+
+export function activeAssetIncome(): number {
+  return state.assets
+    .filter((asset) => (asset.recurringTime ?? 0) > 0)
+    .reduce((sum, asset) => sum + asset.passive, 0);
+}
+
 export function totalPassiveIncome(): number {
   return state.passiveIncome + cashInterestIncome();
+}
+
+export function truePassiveIncome(): number {
+  return passiveAssetIncome() + cashInterestIncome();
 }
 
 export function assetValue(): number {
@@ -126,11 +142,11 @@ export function monthlyCashFlow(): number {
 
 export function fireProgress(): number {
   if (state.expenses <= 0) return 100;
-  return Math.min(100, Math.max(0, (totalPassiveIncome() / state.expenses) * 100));
+  return Math.min(100, Math.max(0, (truePassiveIncome() / state.expenses) * 100));
 }
 
 export function fireGap(): number {
-  return Math.max(0, state.expenses - totalPassiveIncome());
+  return Math.max(0, state.expenses - truePassiveIncome());
 }
 
 export function runwayMonths(): number {

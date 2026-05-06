@@ -22,6 +22,7 @@ import {
 } from './game';
 import { render } from './render';
 import {
+  activeAssetIncome,
   cashInterestIncome,
   debtPayments,
   familyLabel,
@@ -29,10 +30,12 @@ import {
   fireProgress,
   monthlyCashFlow,
   monthlyTimeCapacity,
+  passiveAssetIncome,
   recurringTime,
   state,
   totalDebt,
   totalPassiveIncome,
+  truePassiveIncome,
 } from './state';
 import { setThemeChangeListener, toggleTheme } from './theme';
 import type { StatementTab } from './types';
@@ -138,9 +141,12 @@ window.render_game_to_text = () =>
     month: state.month,
     cash: Math.round(state.cash),
     activeIncome: Math.round(state.activeIncome),
-    passiveIncome: Math.round(totalPassiveIncome()),
-    assetPassiveIncome: Math.round(state.passiveIncome),
+    truePassiveIncome: Math.round(truePassiveIncome()),
+    passiveAssetIncome: Math.round(passiveAssetIncome()),
+    activeAssetIncome: Math.round(activeAssetIncome()),
+    totalAssetIncome: Math.round(state.passiveIncome),
     cashInterestIncome: Math.round(cashInterestIncome()),
+    monthlyEarnings: Math.round(totalPassiveIncome()),
     expenses: Math.round(state.expenses),
     family: familyLabel(),
     familyTime: familyTime(),

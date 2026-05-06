@@ -23,11 +23,19 @@ function renderScreen(): string {
   }
 }
 
+function renderFooter(): string {
+  return `
+    <footer class="app-footer" data-testid="app-footer">
+      <a href="https://github.com/peterb154/cashflow/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer" data-testid="link-changelog">View changelog</a>
+    </footer>`;
+}
+
 export function render(app: HTMLElement): void {
   app.innerHTML = `
     <div class="prototype-frame">
       ${renderTopbar()}
       ${renderScreen()}
+      ${renderFooter()}
     </div>
     ${renderToast()}`;
 }

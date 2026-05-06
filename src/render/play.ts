@@ -8,6 +8,7 @@ import {
 } from '../game';
 import { money, percent } from '../format';
 import {
+  activeAssetIncome,
   cashInterestIncome,
   familyLabel,
   fireGap,
@@ -15,10 +16,11 @@ import {
   monthlyCashFlow,
   monthlyTimeCapacity,
   obligatedTime,
+  passiveAssetIncome,
   runwayMonths,
   state,
   timeUsageRows,
-  totalPassiveIncome,
+  truePassiveIncome,
 } from '../state';
 import type { Card } from '../types';
 import { renderStatements } from './statements';
@@ -70,9 +72,9 @@ export function renderStats(): string {
         <span class="subvalue">After debt payments</span>
       </div>
       <div class="stat-card">
-        <span class="label">Passive</span>
-        <span class="value positive" data-testid="text-passive">${money(totalPassiveIncome())}</span>
-        <span class="subvalue">${money(state.passiveIncome)} assets + ${money(cashInterestIncome())} cash interest</span>
+        <span class="label">Passive (FIRE)</span>
+        <span class="value positive" data-testid="text-passive">${money(truePassiveIncome())}</span>
+        <span class="subvalue">${money(passiveAssetIncome())} truly passive + ${money(cashInterestIncome())} cash interest${activeAssetIncome() > 0 ? ` · ${money(activeAssetIncome())}/mo from active gigs (not FIRE)` : ''}</span>
       </div>
       <div class="stat-card">
         <span class="label">FIRE gap</span>
@@ -122,7 +124,7 @@ function renderFireProgress(): string {
         <div class="panel-title">
           <span class="eyebrow">Financial freedom</span>
           <h2>${percent(fireProgress() / 100)} of the way to FIRE</h2>
-          <p>Passive income must cover monthly expenses: ${money(totalPassiveIncome())} / ${money(state.expenses)}.</p>
+          <p>Truly passive income (no time required) must cover monthly expenses: ${money(truePassiveIncome())} / ${money(state.expenses)}.</p>
         </div>
       </div>
       <div class="progress-track" aria-label="FIRE progress">

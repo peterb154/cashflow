@@ -34,7 +34,7 @@ import {
   monthlyTimeCapacity,
   snapshot,
   state,
-  totalPassiveIncome,
+  truePassiveIncome,
 } from './state';
 import type { Asset, Card, EventCard, ExitCard, Family, Profile } from './types';
 
@@ -161,10 +161,10 @@ function addOrIncreaseDebt(name: string, amount: number, payment: number, rate: 
 }
 
 function checkWin(): void {
-  if (totalPassiveIncome() >= state.expenses && !state.gameWon) {
+  if (truePassiveIncome() >= state.expenses && !state.gameWon) {
     state.gameWon = true;
     state.phase = 'won';
-    state.log.unshift(`Reached FIRE in month ${state.month}: passive income exceeds expenses.`);
+    state.log.unshift(`Reached FIRE in month ${state.month}: truly passive income exceeds expenses.`);
   }
 }
 
@@ -524,11 +524,20 @@ export function systematizeBusiness(): void {
   if (!actionAvailable()) return;
   consumeMonthlyAction();
   state.cash -= SYSTEMATIZE_COST;
+  const wasActive = (asset.recurringTime ?? 0) > 0;
   asset.recurringTime = Math.max(0, (asset.recurringTime ?? 0) - 1);
+  const justGraduated = wasActive && asset.recurringTime === 0;
   state.time = Math.min(monthlyTimeCapacity(), state.time + 1);
   asset.value += SYSTEMATIZE_VALUE_GAIN;
-  state.log.unshift(`Systematized ${asset.name}. Monthly time commitment fell by 1 and asset value improved.`);
-  showToast('Calendar bought back', 'Systems turn a hustle into more of an asset.');
+  state.log.unshift(
+    `Systematized ${asset.name}. Monthly time commitment fell by 1${justGraduated ? ` — now truly passive, ${money(asset.passive)}/mo counts toward FIRE` : ''}.`,
+  );
+  showToast(
+    justGraduated ? 'Now truly passive' : 'Calendar bought back',
+    justGraduated
+      ? `${asset.name} no longer needs your time — its ${money(asset.passive)}/mo counts toward FIRE.`
+      : 'Systems turn a hustle into more of an asset.',
+  );
   render();
 }
 

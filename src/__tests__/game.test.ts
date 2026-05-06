@@ -25,7 +25,7 @@ import {
   monthlyCashFlow,
   state,
   totalDebt,
-  totalPassiveIncome,
+  truePassiveIncome,
 } from '../state';
 import type { Profile } from '../types';
 
@@ -40,15 +40,15 @@ describe('FIRE win condition', () => {
     setRerender(() => {});
   });
 
-  it('flips phase to "won" when total passive income covers expenses', () => {
+  it('flips phase to "won" when truly passive income covers expenses', () => {
     const developer = profile('developer');
     initializeRun(developer, { status: 'single', kids: 0 }, 'test');
     expect(state.phase).toBe('play');
 
-    state.passiveIncome = state.expenses + 100;
-
-    const before = state.gameWon;
-    expect(before).toBe(false);
+    // Bump the truly-passive (no recurringTime) starting asset to cover expenses.
+    const portfolio = state.assets[0];
+    portfolio.passive = state.expenses + 100;
+    state.passiveIncome = portfolio.passive;
 
     nextMonth();
     expect(state.gameWon).toBe(true);
@@ -56,15 +56,53 @@ describe('FIRE win condition', () => {
     expect(fireProgress()).toBe(100);
   });
 
+  it('truePassiveIncome excludes assets with recurringTime > 0', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.cash = 0;
+    state.assets = [
+      {
+        name: 'Consulting gig',
+        value: 1000,
+        passive: 5000,
+        sellable: false,
+        recurringTime: 3,
+      },
+    ];
+    state.passiveIncome = 5000;
+
+    expect(truePassiveIncome()).toBe(0);
+  });
+
+  it('systematizing a business graduates its income to FIRE-counting passive', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.assets = [
+      {
+        name: 'Consulting gig',
+        value: 1000,
+        passive: 800,
+        sellable: false,
+        recurringTime: 1,
+      },
+    ];
+    state.passiveIncome = 800;
+    state.cash = 0;
+
+    expect(truePassiveIncome()).toBe(0);
+
+    state.assets[0].recurringTime = 0;
+
+    expect(truePassiveIncome()).toBe(800);
+  });
+
   it('counts cash interest toward FIRE', () => {
     const developer = profile('developer');
     initializeRun(developer, { status: 'single', kids: 0 }, 'test');
-    state.passiveIncome = 0;
-    state.expenses = 100;
     state.cash = 200000;
 
     expect(cashInterestIncome()).toBe(Math.floor((200000 * 0.08) / 12));
-    expect(totalPassiveIncome()).toBeGreaterThan(state.expenses);
+    expect(truePassiveIncome()).toBeGreaterThan(0);
   });
 });
 
