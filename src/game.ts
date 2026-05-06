@@ -89,7 +89,16 @@ export function drawCard(): Card {
   const roll = random();
   if (roll < OPPORTUNITY_DRAW_THRESHOLD) return { ...randomFrom(opportunities) };
   if (roll < DOODAD_DRAW_THRESHOLD) return { ...randomFrom(doodads) };
-  return { ...randomFrom(events) };
+  return { ...randomFrom(eligibleEvents()) };
+}
+
+function eligibleEvents(): EventCard[] {
+  const married = state.family?.status === 'married';
+  return events.filter((event) => {
+    if (event.familyAction === 'marry' && married) return false;
+    if (event.familyAction === 'divorce' && !married) return false;
+    return true;
+  });
 }
 
 export function initializeRun(
