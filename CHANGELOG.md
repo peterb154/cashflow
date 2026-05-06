@@ -4,6 +4,8 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- refactor: label whisper as Inner Voice, hearts show 5/5 always (`a8afec8`)
+- chore: refresh CHANGELOG [skip ci] (`bae0ec1`)
 - feat: doodads gain a whisper, hearts, and 8 new temptations (`06bbb32`)
 - chore: refresh CHANGELOG [skip ci] (`37ecb9f`)
 - feat: bell-curve opportunity distribution (22 -> 53 cards) (`79521fa`)
