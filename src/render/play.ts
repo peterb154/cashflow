@@ -74,7 +74,7 @@ export function renderStats(): string {
       <div class="stat-card">
         <span class="label">Passive (FIRE)</span>
         <span class="value positive" data-testid="text-passive">${money(truePassiveIncome())}</span>
-        <span class="subvalue">${money(passiveAssetIncome())} truly passive + ${money(cashInterestIncome())} cash interest${activeAssetIncome() > 0 ? ` · ${money(activeAssetIncome())}/mo from active gigs (not FIRE)` : ''}</span>
+        <span class="subvalue">${money(passiveAssetIncome())} passive assets + ${money(cashInterestIncome())} cash interest${activeAssetIncome() > 0 ? ` · ${money(activeAssetIncome())}/mo from active gigs (not FIRE)` : ''}</span>
       </div>
       <div class="stat-card">
         <span class="label">FIRE gap</span>

@@ -34,8 +34,9 @@ function renderIncomeStatement(): string {
     rows.push(['Asset income — needs time', money(activeAsset)]);
   }
   rows.push(
-    ['Asset income — truly passive', money(passiveAsset)],
-    ['Cash interest (8% APY)', money(cashInterest)],
+    ['Truly passive income (no time required)', ''],
+    ['· Passive assets', money(passiveAsset)],
+    ['· Cash interest (8% APY)', money(cashInterest)],
     ['Living expenses', `-${money(state.expenses)}`],
     ['Debt payments', `-${money(debtPayments())}`],
     ['Net monthly cash flow', money(monthlyCashFlow())],
