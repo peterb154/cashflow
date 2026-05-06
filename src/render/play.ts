@@ -296,9 +296,13 @@ function renderCurrentCard(compact = false): string {
         <button class="${card.type === 'doodad' ? 'danger-button' : 'success-button'}" type="button" data-testid="button-accept-card" data-action="acceptCard">
           ${acceptLabel}
         </button>
-        <button class="secondary-button" type="button" data-testid="button-pass-card" data-action="passCard">
+        ${
+          card.type === 'event' && 'required' in card && card.required
+            ? ''
+            : `<button class="secondary-button" type="button" data-testid="button-pass-card" data-action="passCard">
           ${card.type === 'event' ? 'Defer it' : 'Pass'}
-        </button>
+        </button>`
+        }
       </div>
     </article>`;
 }

@@ -8,6 +8,7 @@ export const events: EventCard[] = [
     description: 'A real life surprise hits. Cash absorbs it; debt magnifies it.',
     cost: 950,
     expenseChange: 0,
+    required: true,
     lesson: 'Runway is a financial shock absorber.',
   },
   {
@@ -17,6 +18,7 @@ export const events: EventCard[] = [
     description: 'Extra money appears. It can become capital, snowball fuel, or a doodad story.',
     cost: -1800,
     expenseChange: 0,
+    required: true,
     lesson: 'Windfalls reveal the plan you already had.',
   },
   {
@@ -26,6 +28,7 @@ export const events: EventCard[] = [
     description: 'Inflation nudges the run rate higher unless you actively redesign expenses.',
     cost: 0,
     expenseChange: 160,
+    required: true,
     lesson: 'Expense drift quietly moves the FIRE line.',
   },
   {
@@ -44,6 +47,7 @@ export const events: EventCard[] = [
     description: 'Not glamorous, but transportation keeps active income alive.',
     cost: 700,
     expenseChange: 0,
+    required: true,
     lesson: 'Some expenses protect the income engine.',
   },
   {
@@ -86,6 +90,7 @@ export const events: EventCard[] = [
     description: 'A schedule change forces paid help or lost work capacity this month.',
     cost: 450,
     expenseChange: 120,
+    required: true,
     lesson: 'Family logistics show up as both time and money pressure.',
   },
   {
@@ -105,6 +110,7 @@ export const events: EventCard[] = [
     description: 'No drama, just a higher monthly bill you now have to absorb.',
     cost: 0,
     expenseChange: 95,
+    required: true,
     lesson: 'The run rate drifts upward unless you actively manage it.',
   },
   {
@@ -114,6 +120,7 @@ export const events: EventCard[] = [
     description: 'A lump sum shows up. The statement will reveal whether it becomes freedom or consumption.',
     cost: -2400,
     expenseChange: 0,
+    required: true,
     lesson: 'Windfalls are accelerants, not plans.',
   },
   {
@@ -123,6 +130,7 @@ export const events: EventCard[] = [
     description: 'Family responsibility increases for a season. You cannot optimize every human obligation away.',
     cost: 600,
     expenseChange: 100,
+    required: true,
     lesson: 'A resilient plan has margin for people, not just assets.',
   },
   {
@@ -133,6 +141,7 @@ export const events: EventCard[] = [
     cost: 0,
     incomeChange: -650,
     expenseChange: 0,
+    required: true,
     lesson: 'Depending only on active income is a concentration risk.',
   },
 ];
