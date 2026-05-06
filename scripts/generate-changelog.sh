@@ -18,7 +18,7 @@ cd "$(dirname "$0")/.."
       current_date="$date"
     fi
     echo "- $subject (\`$hash\`)"
-  done < <(git log --pretty=format:'%h|%ad|%s' --date=short)
+  done < <(git log --invert-grep --grep='^chore: refresh CHANGELOG' --pretty=format:'%h|%ad|%s' --date=short)
 
   echo
 } > CHANGELOG.md

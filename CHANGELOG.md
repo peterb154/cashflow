@@ -5,17 +5,11 @@ Generated from git history. Run `pnpm changelog` to refresh.
 ## 2026-05-06
 
 - fix: most life events are now required (can't be deferred) (`3c90089`)
-- chore: refresh CHANGELOG [skip ci] (`26ff144`)
 - refactor: label whisper as Inner Voice, hearts show 5/5 always (`a8afec8`)
-- chore: refresh CHANGELOG [skip ci] (`bae0ec1`)
 - feat: doodads gain a whisper, hearts, and 8 new temptations (`06bbb32`)
-- chore: refresh CHANGELOG [skip ci] (`37ecb9f`)
 - feat: bell-curve opportunity distribution (22 -> 53 cards) (`79521fa`)
-- chore: refresh CHANGELOG [skip ci] (`06cd3bf`)
 - feat: pre-roll family on the picker, with re-roll button (`51894d4`)
-- chore: refresh CHANGELOG [skip ci] (`fb50d82`)
 - refactor: drop prototype framing from user-facing copy (`a9425f8`)
-- chore: refresh CHANGELOG [skip ci] (`a219b27`)
 - docs: note CHANGELOG is auto-refreshed by CI (`d25c72f`)
 - ci: auto-refresh CHANGELOG.md after each deploy (`4f358d0`)
 - feat: only truly passive income counts toward FIRE (`2a2b3ce`)
