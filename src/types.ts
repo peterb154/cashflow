@@ -44,8 +44,6 @@ export interface Profile {
   skill: number;
   jobTime: number;
   jobLabel: string;
-  time: number;
-  risk: number;
   defaultFamily?: Family;
   debts: Debt[];
   assets: Asset[];
@@ -155,7 +153,6 @@ export interface GameState {
   skill: number;
   baseTime: number;
   time: number;
-  risk: number;
   family: Family | null;
   currentCard: Card | null;
   statementTab: StatementTab;

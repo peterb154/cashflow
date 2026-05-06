@@ -26,7 +26,7 @@ function renderProfileCard(profile: Profile): string {
         <div><dt>Active income</dt><dd>${money(profile.activeIncome)}/mo</dd></div>
         <div><dt>Expenses</dt><dd>${money(profile.expenses)}/mo</dd></div>
         <div><dt>Debt</dt><dd>${money(totalDebtFor(profile))}</dd></div>
-        <div><dt>Free time</dt><dd>${profile.time}/10</dd></div>
+        <div><dt>Job hours</dt><dd>${profile.jobTime}/10 mo</dd></div>
         <div><dt>Family</dt><dd>${familyHint(profile)}</dd></div>
       </dl>
       <p class="picker-challenge"><strong>Challenge:</strong> ${profile.challenge}</p>

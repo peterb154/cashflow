@@ -109,7 +109,6 @@ export function initializeRun(
   state.skill = profile.skill;
   state.baseTime = STARTING_TIME;
   state.time = monthlyTimeCapacity();
-  state.risk = profile.risk;
   state.currentCard = drawCard();
   state.phase = 'play';
   state.log = [

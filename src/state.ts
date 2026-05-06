@@ -21,7 +21,6 @@ export const state: GameState = {
   skill: 0,
   baseTime: 0,
   time: 0,
-  risk: 0,
   family: null,
   currentCard: null,
   statementTab: 'income',
