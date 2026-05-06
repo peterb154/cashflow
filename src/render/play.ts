@@ -140,7 +140,34 @@ function renderActions(): string {
   const sellableAsset = bestSellableAsset();
   const systemAsset = bestSystematizeAsset();
   const actionUsed = state.actionTakenThisMonth;
-  const lock = actionUsed ? 'disabled aria-disabled="true"' : '';
+
+  // Per-lever availability — disabled when the lever can't have an effect
+  // OR when the monthly action slot is already spent.
+  const snowballNoOp = !snowball.target || snowball.amount <= 0;
+  const cutNoOp = cut <= 0 || state.time < 1;
+  const skillNoOp = state.skill >= 10 || state.cash < SKILL_BUILD_COST || state.time < 2;
+  const sellNoOp = !sellableAsset;
+  const systematizeNoOp = !systemAsset || state.cash < SYSTEMATIZE_COST;
+  const reduceNoOp = !state.profile || state.profile.jobTime <= MIN_JOB_TIME;
+
+  const dis = (extra: boolean): string => (actionUsed || extra ? 'disabled aria-disabled="true"' : '');
+
+  let cutCopy: string;
+  if (cut <= 0) cutCopy = 'No more easy cuts — already at the minimum floor.';
+  else if (state.time < 1) cutCopy = 'Need 1 free time unit. Reduce hours or wait for next month.';
+  else cutCopy = `Trade 1 recurring time to cut ${money(cut)}/mo from living expenses.`;
+
+  let skillCopy: string;
+  if (state.skill >= 10) skillCopy = 'Business skill maxed at 10/10.';
+  else if (state.cash < SKILL_BUILD_COST) skillCopy = `Costs ${money(SKILL_BUILD_COST)} — not enough cash right now.`;
+  else if (state.time < 2) skillCopy = 'Costs 2 free time units — not enough free time right now.';
+  else skillCopy = `Costs 2 time and ${money(SKILL_BUILD_COST)} to unlock better deal flow.`;
+
+  let systematizeCopy: string;
+  if (!systemAsset) systematizeCopy = 'Need a time-consuming asset first; systematizing buys back 1 time unit/month.';
+  else if (state.cash < SYSTEMATIZE_COST) systematizeCopy = `Costs ${money(SYSTEMATIZE_COST)} — not enough cash right now.`;
+  else systematizeCopy = `Spend ${money(SYSTEMATIZE_COST)} on ${systemAsset.name} to buy back 1 time unit/month.`;
+
   let footnote: string;
   if (hasCard) {
     footnote = 'Resolve or pass the monthly card before closing the month.';
@@ -156,31 +183,37 @@ function renderActions(): string {
         <h2 id="monthly-actions">Choose your lever</h2>
       </div>
       <div class="action-grid">
-        <button class="action-card" type="button" data-testid="button-debt-snowball" data-action="payDebtSnowball" ${lock}>
+        <button class="action-card" type="button" data-testid="button-debt-snowball" data-action="payDebtSnowball" ${dis(snowballNoOp)}>
           <strong>Debt snowball</strong>
-          <span>${snowball.amount > 0 && snowball.target ? `Pay ${money(snowball.amount)} toward ${snowball.target.name}; keep $1,000 buffer.` : 'No extra cash above the $1,000 buffer right now.'}</span>
+          <span>${
+            !snowball.target
+              ? 'Debt-free — nothing to snowball.'
+              : snowball.amount > 0
+                ? `Pay ${money(snowball.amount)} toward ${snowball.target.name}; keep $1,000 buffer.`
+                : 'No extra cash above the $1,000 buffer right now.'
+          }</span>
         </button>
-        <button class="action-card" type="button" data-testid="button-cut-expenses" data-action="cutExpenses" ${lock}>
+        <button class="action-card" type="button" data-testid="button-cut-expenses" data-action="cutExpenses" ${dis(cutNoOp)}>
           <strong>Cut expenses</strong>
-          <span>Trade 1 recurring time to cut ${money(cut)}/mo from living expenses.</span>
+          <span>${cutCopy}</span>
         </button>
-        <button class="action-card" type="button" data-testid="button-build-skill" data-action="buildSkill" ${lock}>
+        <button class="action-card" type="button" data-testid="button-build-skill" data-action="buildSkill" ${dis(skillNoOp)}>
           <strong>Build business skill</strong>
-          <span>Costs 2 time and ${money(SKILL_BUILD_COST)} to unlock better deal flow.</span>
+          <span>${skillCopy}</span>
         </button>
-        <button class="action-card" type="button" data-testid="button-sell-asset" data-action="sellAsset" ${lock}>
+        <button class="action-card" type="button" data-testid="button-sell-asset" data-action="sellAsset" ${dis(sellNoOp)}>
           <strong>Sell best asset</strong>
           <span>${sellableAsset ? `Sell ${sellableAsset.name} for ${money(sellableAsset.value)}; lose ${money(sellableAsset.passive ?? 0)}/mo income.` : 'No sellable asset on the balance sheet yet.'}</span>
         </button>
-        <button class="action-card" type="button" data-testid="button-systematize" data-action="systematizeBusiness" ${lock}>
+        <button class="action-card" type="button" data-testid="button-systematize" data-action="systematizeBusiness" ${dis(systematizeNoOp)}>
           <strong>Systematize</strong>
-          <span>${systemAsset ? `Spend ${money(SYSTEMATIZE_COST)} on ${systemAsset.name} to buy back 1 time unit/month.` : `Need a time-consuming asset first; systematizing buys back 1 time unit/month.`}</span>
+          <span>${systematizeCopy}</span>
         </button>
-        <button class="action-card" type="button" data-testid="button-reduce-hours" data-action="reduceHours" ${lock}>
+        <button class="action-card" type="button" data-testid="button-reduce-hours" data-action="reduceHours" ${dis(reduceNoOp)}>
           <strong>Reduce hours</strong>
           <span>${state.profile && state.profile.jobTime > MIN_JOB_TIME ? `Drop 1 work unit. -${money(perShiftIncome())}/mo, +1 free time/mo from now on.` : 'Already at minimum work hours.'}</span>
         </button>
-        <button class="action-card" type="button" data-testid="button-increase-hours" data-action="increaseHours" ${lock}>
+        <button class="action-card" type="button" data-testid="button-increase-hours" data-action="increaseHours" ${dis(false)}>
           <strong>Take more hours</strong>
           <span>Add 1 work unit. +${money(perShiftIncome())}/mo, -1 free time/mo from now on.</span>
         </button>
