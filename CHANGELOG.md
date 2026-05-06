@@ -4,6 +4,9 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- feat: only truly passive income counts toward FIRE (`2a2b3ce`)
+- refactor: profile audit cleanup + balance tuning (`ebf4ba9`)
+- docs: add CHANGELOG generated from git history (`5a9b433`)
 - feat: cap monthly actions at one (or none) (`b090dd6`)
 - feat: trade hours for time (`be7d81c`)
 - refactor: explain kid time math in time accounting (`fbb92cf`)
