@@ -32,7 +32,7 @@ function renderFooter(): string {
 
 export function render(app: HTMLElement): void {
   app.innerHTML = `
-    <div class="prototype-frame">
+    <div class="app-frame">
       ${renderTopbar()}
       ${renderScreen()}
       ${renderFooter()}

@@ -2,11 +2,12 @@ export function renderIntro(): string {
   return `
     <div class="screen hero">
       <section class="intro-card">
-        <span class="eyebrow">Single-player slice</span>
+        <span class="eyebrow">A FIRE strategy game</span>
         <h2>Roll a life. Read the numbers. Buy freedom.</h2>
         <p>
-          This first prototype is one-player only. It tests the core loop: monthly turns, financial statements,
-          asymmetric starting lives, doodad temptations, business opportunities, debt snowball, and FIRE progress.
+          Pick a starting life, then take it one month at a time. Manage cash flow, dodge doodads,
+          buy assets, build skill, and bend the run rate down. You win when truly passive income
+          covers expenses — that's FIRE.
         </p>
         <div class="button-row">
           <button class="primary-button" type="button" data-testid="button-roll-life" data-action="rollLife">

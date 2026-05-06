@@ -171,7 +171,7 @@ button:active {
   padding: var(--space-4);
 }
 
-.prototype-frame {
+.app-frame {
   display: grid;
   gap: var(--space-4);
 }

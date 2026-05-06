@@ -415,7 +415,7 @@ export function cutExpenses(): void {
   const cut = expenseCutAmount();
   if (cut <= 0) {
     state.time += 1;
-    showToast('No more easy cuts', 'Your living expenses are already at the minimum floor for this prototype.');
+    showToast('No more easy cuts', 'Your living expenses are already at the minimum floor.');
     return;
   }
   consumeMonthlyAction();

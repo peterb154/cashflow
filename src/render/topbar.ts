@@ -24,7 +24,6 @@ export function renderTopbar(): string {
       <div class="brand">
         ${logoSvg()}
         <div class="brand-copy">
-          <span class="eyebrow">Prototype</span>
           <h1>FIRE Fastlane</h1>
         </div>
       </div>
