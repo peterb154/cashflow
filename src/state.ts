@@ -32,6 +32,7 @@ export const state: GameState = {
   expenseCuts: 0,
   gameWon: false,
   actionTakenThisMonth: false,
+  pickerFamilies: {},
 };
 
 export function cloneProfile(profile: Profile): Profile {

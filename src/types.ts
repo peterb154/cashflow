@@ -164,4 +164,5 @@ export interface GameState {
   expenseCuts: number;
   gameWon: boolean;
   actionTakenThisMonth: boolean;
+  pickerFamilies: Record<string, Family>;
 }

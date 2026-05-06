@@ -11,6 +11,7 @@ import {
   passCard,
   payDebtSnowball,
   reduceHours,
+  rerollPickerFamily,
   resetGame,
   rollLife,
   sellAsset,
@@ -79,6 +80,9 @@ const actions: Record<string, Action> = {
   },
   startSpecificProfile: (arg) => {
     if (typeof arg === 'string') startSpecificProfile(arg);
+  },
+  rerollPickerFamily: (arg) => {
+    if (typeof arg === 'string') rerollPickerFamily(arg);
   },
 };
 

@@ -137,7 +137,31 @@ export function rollLife(): void {
 export function startSpecificProfile(id: string): void {
   const found = profiles.find((item) => item.id === id) ?? profiles[0];
   const profile = cloneProfile(found);
-  initializeRun(profile, profile.defaultFamily ?? randomFrom(familyStarts), 'Selected life');
+  const family =
+    profile.defaultFamily ?? state.pickerFamilies[profile.id] ?? randomFrom(familyStarts);
+  initializeRun(profile, family, 'Selected life');
+}
+
+function rollPickerFamilies(): void {
+  const next: Record<string, Family> = {};
+  for (const profile of profiles) {
+    if (!profile.defaultFamily) {
+      const sample = randomFrom(familyStarts);
+      next[profile.id] = { status: sample.status, kids: sample.kids };
+    }
+  }
+  state.pickerFamilies = next;
+}
+
+export function rerollPickerFamily(profileId: string): void {
+  const profile = profiles.find((p) => p.id === profileId);
+  if (!profile || profile.defaultFamily) return;
+  const sample = randomFrom(familyStarts);
+  state.pickerFamilies = {
+    ...state.pickerFamilies,
+    [profileId]: { status: sample.status, kids: sample.kids },
+  };
+  render();
 }
 
 function addDebtInterest(): void {
@@ -559,6 +583,7 @@ export function continuePlay(): void {
 }
 
 export function showLifePicker(): void {
+  rollPickerFamilies();
   state.phase = 'picking';
   render();
 }

@@ -1137,3 +1137,25 @@ button:active {
   color: var(--color-text-muted);
   text-decoration: underline;
 }
+
+.picker-reroll {
+  margin: 0;
+  text-align: right;
+}
+
+.picker-reroll button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs, 0.75rem);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.picker-reroll button:hover,
+.picker-reroll button:focus-visible {
+  color: var(--color-text);
+  text-decoration: underline;
+}

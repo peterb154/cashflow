@@ -1,20 +1,27 @@
 import { profiles } from '../data/profiles';
 import { money } from '../format';
-import type { Profile } from '../types';
+import { state } from '../state';
+import type { Family, Profile } from '../types';
 
 function totalDebtFor(profile: Profile): number {
   return profile.debts.reduce((sum, debt) => sum + Math.max(0, debt.balance), 0);
 }
 
+function rolledFamilyFor(profile: Profile): Family | null {
+  if (profile.defaultFamily) return profile.defaultFamily;
+  return state.pickerFamilies[profile.id] ?? null;
+}
+
 function familyHint(profile: Profile): string {
-  if (!profile.defaultFamily) return 'Family rolled at start';
-  const f = profile.defaultFamily;
+  const f = rolledFamilyFor(profile);
+  if (!f) return 'Family rolled when you pick';
   if (f.kids === 0) return f.status === 'married' ? 'Married, no kids' : 'Single, no kids';
   const kids = f.kids === 1 ? '1 kid' : `${f.kids} kids`;
   return `${f.status === 'married' ? 'Married' : 'Single parent'}, ${kids}`;
 }
 
 function renderProfileCard(profile: Profile): string {
+  const canRerollFamily = !profile.defaultFamily;
   return `
     <article class="picker-card" data-testid="picker-card-${profile.id}">
       <header>
@@ -29,6 +36,11 @@ function renderProfileCard(profile: Profile): string {
         <div><dt>Job hours</dt><dd>${profile.jobTime}/10 mo</dd></div>
         <div><dt>Family</dt><dd>${familyHint(profile)}</dd></div>
       </dl>
+      ${
+        canRerollFamily
+          ? `<p class="picker-reroll"><button type="button" data-testid="button-reroll-${profile.id}" data-action="rerollPickerFamily" data-arg="${profile.id}">↻ Re-roll family</button></p>`
+          : ''
+      }
       <p class="picker-challenge"><strong>Challenge:</strong> ${profile.challenge}</p>
       <p class="picker-edge"><strong>Hidden advantage:</strong> ${profile.hiddenAdvantage}</p>
       <button class="primary-button" type="button" data-testid="button-pick-${profile.id}" data-action="startSpecificProfile" data-arg="${profile.id}">
