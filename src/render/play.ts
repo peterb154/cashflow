@@ -98,7 +98,6 @@ function renderTimeAccounting(): string {
         <strong>${state.time}/${state.baseTime} free units now</strong>
       </div>
       <div class="time-accounting-grid">
-        <span>Budget <strong>${state.baseTime}/10</strong></span>
         <span>Recurring obligations <strong>-${obligatedTime()}/10</strong></span>
         <span>Starts free each month <strong>${monthlyTimeCapacity()}/10</strong></span>
       </div>
