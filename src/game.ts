@@ -92,11 +92,16 @@ export function drawCard(): Card {
   return { ...randomFrom(eligibleEvents()) };
 }
 
+// Singles are ~4x less likely to roll a new-baby card than married couples.
+// new-baby stays in the pool only ~1 in 4 draws when single; always when married.
+const SINGLE_NEW_BABY_PROB = 0.25;
+
 function eligibleEvents(): EventCard[] {
   const married = state.family?.status === 'married';
   return events.filter((event) => {
     if (event.familyAction === 'marry' && married) return false;
     if (event.familyAction === 'divorce' && !married) return false;
+    if (event.familyAction === 'addKid' && !married && random() > SINGLE_NEW_BABY_PROB) return false;
     return true;
   });
 }
