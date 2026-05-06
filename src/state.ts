@@ -100,7 +100,7 @@ export function timeUsageRows(): Array<[string, number]> {
     rows.push(['Marriage / household coordination', familyTime()]);
   }
   state.assets
-    .filter((asset) => (asset.recurringTime ?? 0) > 0)
+    .filter((asset) => (asset.recurringTime ?? 0) !== 0)
     .forEach((asset) => rows.push([asset.name, asset.recurringTime ?? 0]));
   return rows;
 }

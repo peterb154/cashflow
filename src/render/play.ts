@@ -39,7 +39,7 @@ function renderProfileHeader(): string {
     <div class="tag-row">
       <span class="tag primary">Business skill ${state.skill}/10</span>
       <span class="tag">Free time now ${state.time}/${state.baseTime}</span>
-      <span class="tag warning">Recurring obligations ${obligatedTime()}/${state.baseTime}</span>
+      <span class="tag warning">Recurring obligations ${obligatedTime()}/10</span>
       <span class="tag success">Family: ${familyLabel()}</span>
     </div>`;
 }
@@ -98,8 +98,8 @@ function renderTimeAccounting(): string {
         <strong>${state.time}/${state.baseTime} free units now</strong>
       </div>
       <div class="time-accounting-grid">
-        <span>Recurring obligations <strong>-${obligatedTime()}/${state.baseTime}</strong></span>
-        <span>Starts free each month <strong>${monthlyTimeCapacity()}/${state.baseTime}</strong></span>
+        <span>Recurring obligations <strong>-${obligatedTime()}/10</strong></span>
+        <span>Starts free each month <strong>${monthlyTimeCapacity()}/10</strong></span>
       </div>
       <div class="time-source-list">
         ${
@@ -107,7 +107,7 @@ function renderTimeAccounting(): string {
             ? sources
                 .map(
                   ([label, amount], index) =>
-                    `<div class="time-source" data-testid="row-time-source-${index}"><span>${label}</span><strong>-${amount}</strong></div>`,
+                    `<div class="time-source" data-testid="row-time-source-${index}"><span>${label}</span><strong>${amount >= 0 ? `-${amount}` : `+${-amount}`}</strong></div>`,
                 )
                 .join('')
             : '<div class="time-source"><span>No recurring obligations yet</span><strong>0</strong></div>'

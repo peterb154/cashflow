@@ -47,9 +47,12 @@ function renderIncomeStatement(): string {
 
 function renderBalanceSheet(): string {
   const rows: Array<[string, string]> = [['Cash', money(state.cash)]];
-  if (state.assets.length) {
+  // Filter out lifestyle entries (cleaner, pet, expense-cuts) that exist purely
+  // to track time effects — they have value 0 and don't belong on a balance sheet.
+  const balanceSheetAssets = state.assets.filter((asset) => asset.value > 0);
+  if (balanceSheetAssets.length) {
     rows.push(['Assets', '']);
-    for (const asset of state.assets) {
+    for (const asset of balanceSheetAssets) {
       rows.push([`· ${asset.name}`, money(asset.value)]);
     }
     rows.push(['Total asset value', money(assetValue())]);
@@ -59,8 +62,8 @@ function renderBalanceSheet(): string {
   rows.push(
     ['Total debt', `-${money(totalDebt())}`],
     ['Net worth', money(netWorth())],
-    ['Free time inventory', `${state.time}/${state.baseTime} units`],
-    ['Obligated time liability', `-${obligatedTime()}/${state.baseTime} units`],
+    ['Free time inventory', `${state.time}/10 units`],
+    ['Obligated time liability', `-${obligatedTime()}/10 units`],
     ['Business skill asset', `${state.skill}/10`],
   );
   return renderRows(rows);

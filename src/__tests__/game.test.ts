@@ -24,6 +24,8 @@ import {
   debtPayments,
   fireProgress,
   monthlyCashFlow,
+  monthlyTimeCapacity,
+  obligatedTime,
   state,
   totalDebt,
   truePassiveIncome,
@@ -394,10 +396,11 @@ describe('doodad timeChange', () => {
     setRerender(() => {});
   });
 
-  it('persists across nextMonth (recurring effect, not one-shot)', () => {
+  it('positive timeChange (cleaner) frees an obligation line that persists across months', () => {
     const developer = profile('developer');
     initializeRun(developer, { status: 'single', kids: 0 }, 'test');
     state.cash = 5000;
+    const startCapacity = monthlyTimeCapacity();
     const startBaseTime = state.baseTime;
 
     state.currentCard = {
@@ -414,16 +417,20 @@ describe('doodad timeChange', () => {
     };
     acceptCard();
 
-    expect(state.baseTime).toBe(startBaseTime + 1);
+    // baseTime stays at 10 — the budget itself doesn't change.
+    expect(state.baseTime).toBe(startBaseTime);
+    // Capacity went up by 1 because we added a -1-recurringTime asset (saved hour).
+    expect(monthlyTimeCapacity()).toBe(startCapacity + 1);
 
     nextMonth();
-    expect(state.baseTime).toBe(startBaseTime + 1); // still bumped after a month
+    expect(monthlyTimeCapacity()).toBe(startCapacity + 1);
   });
 
-  it('negative timeChange reduces baseTime permanently', () => {
+  it('negative timeChange (pet) adds to obligated time and persists', () => {
     const developer = profile('developer');
     initializeRun(developer, { status: 'single', kids: 0 }, 'test');
     state.cash = 5000;
+    const startObligated = obligatedTime();
     const startBaseTime = state.baseTime;
 
     state.currentCard = {
@@ -440,7 +447,16 @@ describe('doodad timeChange', () => {
     };
     acceptCard();
 
-    expect(state.baseTime).toBe(startBaseTime - 1);
+    expect(state.baseTime).toBe(startBaseTime);
+    expect(obligatedTime()).toBe(startObligated + 1);
+  });
+
+  it('over-committed obligations exceed 10 (visually, with capacity clamped to 0)', () => {
+    const nurse = profile('single-parent');
+    initializeRun(nurse, { status: 'single', kids: 2 }, 'test');
+    // Nurse single-parent of 2: jobTime 5 + family 6 = 11 already over 10.
+    expect(obligatedTime()).toBeGreaterThan(10);
+    expect(monthlyTimeCapacity()).toBe(0);
   });
 });
 

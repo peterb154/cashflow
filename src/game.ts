@@ -341,7 +341,16 @@ export function acceptCard(): void {
     const netExpenseChange = (card.expenseChange ?? 0) - (card.expenseReduction ?? 0);
     state.expenses += netExpenseChange;
     if (card.timeChange) {
-      state.baseTime += card.timeChange;
+      // timeChange becomes a recurring obligation line, not a budget shift.
+      // Positive timeChange (cleaner, closer apt) = saved hours = negative recurringTime.
+      // Negative timeChange (pet, kids' travel team) = added burden = positive recurringTime.
+      state.assets.push({
+        name: card.title,
+        value: 0,
+        passive: 0,
+        sellable: false,
+        recurringTime: -card.timeChange,
+      });
       state.time = Math.max(0, Math.min(monthlyTimeCapacity(), state.time + card.timeChange));
     }
     state.totalDoodads += card.cost + netExpenseChange * 12;
