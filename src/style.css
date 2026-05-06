@@ -1198,3 +1198,24 @@ button:active {
   font-size: var(--text-sm, 0.875rem);
   line-height: 1.4;
 }
+
+.intro-steps,
+.intro-bullets {
+  margin: 0;
+  padding: 0 0 0 var(--space-5);
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.intro-steps li::marker,
+.intro-bullets li::marker {
+  color: var(--color-text-faint);
+}
+
+.intro-steps strong,
+.intro-bullets strong {
+  color: var(--color-text);
+}
