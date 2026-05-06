@@ -215,7 +215,12 @@ function renderCardEffects(card: Card, compact: boolean): string {
   if ('sellability' in card) rows.push(['Sellability', card.sellability]);
   if ('risk' in card) rows.push(['Risk', card.risk]);
   if ('happiness' in card && card.happiness) {
-    rows.push(['Happiness', '♥'.repeat(Math.max(0, Math.min(5, card.happiness)))]);
+    const filled = Math.max(0, Math.min(5, card.happiness));
+    const empty = 5 - filled;
+    const hearts =
+      `<span class="hearts-on">${'♥'.repeat(filled)}</span>` +
+      `<span class="hearts-off">${'♡'.repeat(empty)}</span>`;
+    rows.push(['Happiness', hearts]);
   }
 
   const compactRows =
@@ -271,7 +276,10 @@ function renderCurrentCard(compact = false): string {
           ? 'Sell asset'
           : 'Resolve event';
   const whisper = card.type === 'doodad' && 'whisper' in card && card.whisper
-    ? `<p class="choice-whisper" data-testid="text-card-whisper">“${card.whisper}”</p>`
+    ? `<div class="choice-whisper" data-testid="text-card-whisper">
+         <span class="choice-whisper-label">Inner voice</span>
+         <p>“${card.whisper}”</p>
+       </div>`
     : '';
   return `
     <article class="choice-card ${card.type}" data-testid="card-current">

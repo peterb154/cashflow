@@ -1161,18 +1161,40 @@ button:active {
 }
 
 .effect-happiness strong {
-  color: var(--color-error);
   font-size: 1.05em;
   letter-spacing: 0.1em;
 }
 
-.choice-whisper {
-  font-style: italic;
+.effect-happiness .hearts-on {
   color: var(--color-error);
+}
+
+.effect-happiness .hearts-off {
+  color: var(--color-text-faint);
+  margin-left: 2px;
+}
+
+.choice-whisper {
   margin: 0;
   padding: var(--space-2) var(--space-3);
   border-left: 3px solid var(--color-error);
   background: color-mix(in oklab, var(--color-error) 8%, transparent);
+}
+
+.choice-whisper-label {
+  display: block;
+  font-size: var(--text-xs, 0.75rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-error);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.choice-whisper p {
+  margin: 0;
+  font-style: italic;
+  color: var(--color-error);
   font-size: var(--text-sm, 0.875rem);
   line-height: 1.4;
 }
