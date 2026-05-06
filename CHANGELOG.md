@@ -4,6 +4,8 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- refactor: drop prototype framing from user-facing copy (`a9425f8`)
+- chore: refresh CHANGELOG [skip ci] (`a219b27`)
 - docs: note CHANGELOG is auto-refreshed by CI (`d25c72f`)
 - ci: auto-refresh CHANGELOG.md after each deploy (`4f358d0`)
 - feat: only truly passive income counts toward FIRE (`2a2b3ce`)
