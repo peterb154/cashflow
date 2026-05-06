@@ -90,8 +90,11 @@ export function timeUsageRows(): Array<[string, number]> {
     rows.push([state.profile?.jobLabel ?? `${state.profile?.name ?? 'Job'} work`, jobTime()]);
   }
   if (state.family?.kids) {
-    const perKid = state.family.status === 'married' ? FAMILY_KID_TIME_MARRIED : FAMILY_KID_TIME_SINGLE;
-    rows.push([`Kids: ${state.family.kids} × ${perKid} time`, familyTime()]);
+    const married = state.family.status === 'married';
+    const perKid = married ? FAMILY_KID_TIME_MARRIED : FAMILY_KID_TIME_SINGLE;
+    const kidsLabel = state.family.kids === 1 ? '1 kid' : `${state.family.kids} kids`;
+    const context = married ? 'married — shared' : 'single parent — no spouse to split';
+    rows.push([`${kidsLabel} × ${perKid} time/kid (${context})`, familyTime()]);
   } else if (state.family?.status === 'married') {
     rows.push(['Marriage / household coordination', familyTime()]);
   }
