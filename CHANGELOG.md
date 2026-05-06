@@ -4,6 +4,7 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- chore: exclude bot CHANGELOG-refresh commits from generated changelog (`c9e685b`)
 - fix: most life events are now required (can't be deferred) (`3c90089`)
 - refactor: label whisper as Inner Voice, hearts show 5/5 always (`a8afec8`)
 - feat: doodads gain a whisper, hearts, and 8 new temptations (`06bbb32`)
