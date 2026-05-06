@@ -4,6 +4,8 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- docs: note CHANGELOG is auto-refreshed by CI (`d25c72f`)
+- ci: auto-refresh CHANGELOG.md after each deploy (`4f358d0`)
 - feat: only truly passive income counts toward FIRE (`2a2b3ce`)
 - refactor: profile audit cleanup + balance tuning (`ebf4ba9`)
 - docs: add CHANGELOG generated from git history (`5a9b433`)
