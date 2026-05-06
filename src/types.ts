@@ -54,6 +54,7 @@ export interface Opportunity {
   id: string;
   type: 'opportunity';
   title: string;
+  assetName: string;
   description: string;
   cost: number;
   cashFlow: number;

@@ -303,7 +303,7 @@ export function acceptCard(): void {
     state.time = Math.max(0, state.time - card.timeCost);
     state.assets.push({
       id: `${card.id}-${state.month}-${state.assets.length}`,
-      name: card.title,
+      name: card.assetName,
       value: card.value + (card.terminalValue ? Math.round(card.terminalValue * ASSET_TERMINAL_BOOK_VALUE_RATIO) : 0),
       terminalValue: card.terminalValue ?? null,
       passive: Math.max(0, card.cashFlow),
