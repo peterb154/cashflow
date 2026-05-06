@@ -93,15 +93,24 @@ export function drawCard(): Card {
 }
 
 // Singles are ~4x less likely to roll a new-baby card than married couples.
-// new-baby stays in the pool only ~1 in 4 draws when single; always when married.
+// Players with 3+ kids are ~4x less likely than 0-2.
+// Effects multiply: a single parent with 3+ kids is ~16x less likely.
 const SINGLE_NEW_BABY_PROB = 0.25;
+const MANY_KIDS_THRESHOLD = 3;
+const MANY_KIDS_NEW_BABY_PROB = 0.25;
 
 function eligibleEvents(): EventCard[] {
   const married = state.family?.status === 'married';
+  const kids = state.family?.kids ?? 0;
   return events.filter((event) => {
     if (event.familyAction === 'marry' && married) return false;
     if (event.familyAction === 'divorce' && !married) return false;
-    if (event.familyAction === 'addKid' && !married && random() > SINGLE_NEW_BABY_PROB) return false;
+    if (event.familyAction === 'addKid') {
+      let prob = 1;
+      if (!married) prob *= SINGLE_NEW_BABY_PROB;
+      if (kids >= MANY_KIDS_THRESHOLD) prob *= MANY_KIDS_NEW_BABY_PROB;
+      if (random() > prob) return false;
+    }
     return true;
   });
 }
