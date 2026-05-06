@@ -73,6 +73,7 @@ export interface Doodad {
   type: 'doodad';
   title: string;
   description: string;
+  whisper: string;
   cost: number;
   expenseChange: number;
   expenseReduction?: number;

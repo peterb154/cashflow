@@ -214,6 +214,9 @@ function renderCardEffects(card: Card, compact: boolean): string {
   if ('skillRequired' in card) rows.push(['Business skill required', `${card.skillRequired}/10`]);
   if ('sellability' in card) rows.push(['Sellability', card.sellability]);
   if ('risk' in card) rows.push(['Risk', card.risk]);
+  if ('happiness' in card && card.happiness) {
+    rows.push(['Happiness', '♥'.repeat(Math.max(0, Math.min(5, card.happiness)))]);
+  }
 
   const compactRows =
     compact && (card.type === 'opportunity' || card.type === 'exit')
@@ -234,7 +237,10 @@ function renderCardEffects(card: Card, compact: boolean): string {
       : rows;
 
   return `<div class="effect-list ${compact ? 'compact-effects' : ''}">${compactRows
-    .map(([label, value]) => `<div class="effect-item"><span>${label}</span><strong>${value}</strong></div>`)
+    .map(([label, value]) => {
+      const cls = label === 'Happiness' ? 'effect-item effect-happiness' : 'effect-item';
+      return `<div class="${cls}"><span>${label}</span><strong>${value}</strong></div>`;
+    })
     .join('')}</div>`;
 }
 
@@ -264,11 +270,15 @@ function renderCurrentCard(compact = false): string {
         : card.type === 'exit'
           ? 'Sell asset'
           : 'Resolve event';
+  const whisper = card.type === 'doodad' && 'whisper' in card && card.whisper
+    ? `<p class="choice-whisper" data-testid="text-card-whisper">“${card.whisper}”</p>`
+    : '';
   return `
     <article class="choice-card ${card.type}" data-testid="card-current">
       <span class="choice-kicker">${kicker}</span>
       <h2 class="choice-title" data-testid="text-card-title">${card.title}</h2>
       <p>${card.description}</p>
+      ${whisper}
       ${renderCardEffects(card, compact)}
       <div class="lesson ${compact ? 'compact-lesson' : ''}">
         <strong>Lesson</strong>

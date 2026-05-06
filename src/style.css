@@ -1159,3 +1159,20 @@ button:active {
   color: var(--color-text);
   text-decoration: underline;
 }
+
+.effect-happiness strong {
+  color: var(--color-error);
+  font-size: 1.05em;
+  letter-spacing: 0.1em;
+}
+
+.choice-whisper {
+  font-style: italic;
+  color: var(--color-error);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-error);
+  background: color-mix(in oklab, var(--color-error) 8%, transparent);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: 1.4;
+}
