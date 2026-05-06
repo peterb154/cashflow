@@ -34,6 +34,6 @@ Push to `main` → GitHub Actions runs tests, builds, and publishes to GitHub Pa
 
 ## More
 
-- `CHANGELOG.md` — generated from git history; run `pnpm changelog` to refresh
+- `CHANGELOG.md` — auto-refreshed by CI on every deploy; run `pnpm changelog` locally to preview
 - `CLAUDE.md` — architecture and conventions
 - `progress.md` — design intent and TODO list
