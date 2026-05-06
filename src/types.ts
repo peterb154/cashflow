@@ -166,4 +166,5 @@ export interface GameState {
   totalDebtPaid: number;
   expenseCuts: number;
   gameWon: boolean;
+  actionTakenThisMonth: boolean;
 }

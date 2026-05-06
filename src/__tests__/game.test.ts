@@ -240,22 +240,61 @@ describe('hours trade', () => {
     expect(state.activeIncome).toBe(before);
   });
 
-  it('lets a single parent claw back free time by reducing hours', () => {
+  it('lets a single parent claw back free time by reducing hours over two months', () => {
     const nurse = profile('single-parent');
     initializeRun(nurse, { status: 'single', kids: 2 }, 'test');
     // jobTime 5, kids 2 × 3 = 6 obligated → capacity = 10 - 5 - 6 = -1 (clamped 0)
     expect(state.time).toBe(0);
 
-    // First drop: capacity = 10 - 4 - 6 = 0, still pinned at 0.
+    // Month 1 drop: capacity = 10 - 4 - 6 = 0, still pinned at 0.
     reduceHours();
     expect(state.profile!.jobTime).toBe(4);
     expect(state.time).toBe(0);
 
-    // Second drop: capacity = 10 - 3 - 6 = 1, finally has a free unit.
+    // Close the month so a second action becomes available.
+    nextMonth();
+
+    // Month 2 drop: capacity = 10 - 3 - 6 = 1, finally has a free unit.
     reduceHours();
     expect(state.profile!.jobTime).toBe(3);
     expect(state.time).toBe(1);
     expect(state.activeIncome).toBeLessThan(6100);
+  });
+});
+
+describe('one action per month', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+  });
+
+  it('blocks a second action after the first succeeds', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.cash = 5000;
+    state.debts = [{ name: 'Card', balance: 800, payment: 30, rate: 0.2 }];
+
+    payDebtSnowball();
+    expect(state.actionTakenThisMonth).toBe(true);
+
+    const cashAfter = state.cash;
+    const incomeAfter = state.activeIncome;
+    reduceHours();
+
+    expect(state.activeIncome).toBe(incomeAfter);
+    expect(state.cash).toBe(cashAfter);
+  });
+
+  it('resets the action slot when the month closes', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.cash = 5000;
+    state.debts = [{ name: 'Card', balance: 800, payment: 30, rate: 0.2 }];
+
+    payDebtSnowball();
+    expect(state.actionTakenThisMonth).toBe(true);
+
+    nextMonth();
+    expect(state.actionTakenThisMonth).toBe(false);
   });
 });
 

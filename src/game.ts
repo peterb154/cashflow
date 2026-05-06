@@ -121,6 +121,7 @@ export function initializeRun(
   state.totalDebtPaid = 0;
   state.expenseCuts = 0;
   state.gameWon = false;
+  state.actionTakenThisMonth = false;
   state.lastMonth = null;
   showToast(
     logVerb,
@@ -181,6 +182,7 @@ export function nextMonth(): void {
   }
   state.month += 1;
   state.time = monthlyTimeCapacity();
+  state.actionTakenThisMonth = false;
   state.currentCard = drawCard();
   state.lastMonth = {
     before,
@@ -358,6 +360,7 @@ export function passCard(): void {
 }
 
 export function payDebtSnowball(): void {
+  if (!actionAvailable()) return;
   const { target, amount } = debtSnowballAmount();
   if (!target) {
     showToast('No consumer debt', 'You have no active debts to snowball.');
@@ -367,6 +370,7 @@ export function payDebtSnowball(): void {
     showToast('Keep the buffer', `Debt snowball uses all cash above a ${money(EMERGENCY_BUFFER)} emergency buffer. You have nothing extra right now.`);
     return;
   }
+  consumeMonthlyAction();
   state.cash -= amount;
   target.balance = Math.max(0, target.balance - amount);
   state.totalDebtPaid += amount;
@@ -391,7 +395,23 @@ function spendTime(amount: number, label: string): boolean {
   return true;
 }
 
+function actionAvailable(): boolean {
+  if (state.actionTakenThisMonth) {
+    showToast(
+      'One action per month',
+      'You\'ve already used this month\'s action. Close the month to take another.',
+    );
+    return false;
+  }
+  return true;
+}
+
+function consumeMonthlyAction(): void {
+  state.actionTakenThisMonth = true;
+}
+
 export function cutExpenses(): void {
+  if (!actionAvailable()) return;
   if (!spendTime(1, 'expense audit')) return;
   const cut = expenseCutAmount();
   if (cut <= 0) {
@@ -399,6 +419,7 @@ export function cutExpenses(): void {
     showToast('No more easy cuts', 'Your living expenses are already at the minimum floor for this prototype.');
     return;
   }
+  consumeMonthlyAction();
   state.expenses = Math.max(MIN_EXPENSES_FLOOR, state.expenses - cut);
   state.assets.push({
     name: 'DIY expense cuts',
@@ -415,12 +436,14 @@ export function cutExpenses(): void {
 }
 
 export function buildSkill(): void {
+  if (!actionAvailable()) return;
   if (!spendTime(2, 'skill building')) return;
   if (!canAfford(SKILL_BUILD_COST)) {
     state.time += 2;
     showToast('Need cash', `Skill-building costs ${money(SKILL_BUILD_COST)} this month.`);
     return;
   }
+  consumeMonthlyAction();
   state.cash -= SKILL_BUILD_COST;
   state.skill = Math.min(10, state.skill + 1);
   if (state.skill % 2 === 0) {
@@ -432,11 +455,13 @@ export function buildSkill(): void {
 }
 
 export function sellAsset(): void {
+  if (!actionAvailable()) return;
   const asset = bestSellableAsset();
   if (!asset) {
     showToast('No sellable asset', 'Some assets create value but cannot be easily sold yet.');
     return;
   }
+  consumeMonthlyAction();
   state.cash += asset.value;
   state.passiveIncome = Math.max(0, state.passiveIncome - asset.passive);
   state.assets = state.assets.filter((item) => item !== asset);
@@ -456,6 +481,8 @@ export function reduceHours(): void {
     showToast('Already minimum hours', `Can't go below ${MIN_JOB_TIME} unit of paid work.`);
     return;
   }
+  if (!actionAvailable()) return;
+  consumeMonthlyAction();
   const perShift = perShiftIncome();
   state.profile.jobTime -= 1;
   state.activeIncome = Math.max(0, state.activeIncome - perShift);
@@ -472,6 +499,8 @@ export function reduceHours(): void {
 
 export function increaseHours(): void {
   if (!state.profile) return;
+  if (!actionAvailable()) return;
+  consumeMonthlyAction();
   const perShift = perShiftIncome();
   state.profile.jobTime += 1;
   state.activeIncome += perShift;
@@ -493,6 +522,8 @@ export function systematizeBusiness(): void {
     showToast('Need cash', `Systems, delegation, or process cleanup costs ${money(SYSTEMATIZE_COST)}.`);
     return;
   }
+  if (!actionAvailable()) return;
+  consumeMonthlyAction();
   state.cash -= SYSTEMATIZE_COST;
   asset.recurringTime = Math.max(0, (asset.recurringTime ?? 0) - 1);
   state.time = Math.min(monthlyTimeCapacity(), state.time + 1);
