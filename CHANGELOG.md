@@ -4,6 +4,8 @@ Generated from git history. Run `pnpm changelog` to refresh.
 
 ## 2026-05-06
 
+- feat: pre-roll family on the picker, with re-roll button (`51894d4`)
+- chore: refresh CHANGELOG [skip ci] (`fb50d82`)
 - refactor: drop prototype framing from user-facing copy (`a9425f8`)
 - chore: refresh CHANGELOG [skip ci] (`a219b27`)
 - docs: note CHANGELOG is auto-refreshed by CI (`d25c72f`)
