@@ -9,6 +9,7 @@ import {
   EXPENSE_CUT_CAP,
   EXPENSE_CUT_RATIO,
   MIN_EXPENSES_FLOOR,
+  MIN_JOB_TIME,
   OPPORTUNITY_DRAW_THRESHOLD,
   SKILL_BUILD_COST,
   SKILL_INCOME_BUMP,
@@ -441,6 +442,44 @@ export function sellAsset(): void {
   state.assets = state.assets.filter((item) => item !== asset);
   state.log.unshift(`Sold ${asset.name} for ${money(asset.value)}. Passive income fell by ${money(asset.passive)}/mo.`);
   showToast('Asset sold', 'Liquidity is useful, but selling cash-flow assets can move FIRE farther away.');
+  render();
+}
+
+export function perShiftIncome(): number {
+  if (!state.profile || state.profile.jobTime <= 0) return 0;
+  return Math.round(state.activeIncome / state.profile.jobTime);
+}
+
+export function reduceHours(): void {
+  if (!state.profile) return;
+  if (state.profile.jobTime <= MIN_JOB_TIME) {
+    showToast('Already minimum hours', `Can't go below ${MIN_JOB_TIME} unit of paid work.`);
+    return;
+  }
+  const perShift = perShiftIncome();
+  state.profile.jobTime -= 1;
+  state.activeIncome = Math.max(0, state.activeIncome - perShift);
+  state.time = Math.min(monthlyTimeCapacity(), state.time + 1);
+  state.log.unshift(
+    `Reduced hours: -${money(perShift)}/mo income, +1 free time/mo. Job is now ${state.profile.jobTime} units/mo.`,
+  );
+  showToast(
+    'Hours reduced',
+    'Less income, more time — every month going forward, until you take more hours.',
+  );
+  render();
+}
+
+export function increaseHours(): void {
+  if (!state.profile) return;
+  const perShift = perShiftIncome();
+  state.profile.jobTime += 1;
+  state.activeIncome += perShift;
+  state.time = Math.max(0, state.time - 1);
+  state.log.unshift(
+    `Took on more hours: +${money(perShift)}/mo income, -1 free time/mo. Job is now ${state.profile.jobTime} units/mo.`,
+  );
+  showToast('Hours increased', 'More income, less time — every month going forward.');
   render();
 }
 

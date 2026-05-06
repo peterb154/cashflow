@@ -6,9 +6,12 @@ import {
   cutExpenses,
   debtSnowballAmount,
   expenseCutAmount,
+  increaseHours,
   initializeRun,
   nextMonth,
   payDebtSnowball,
+  perShiftIncome,
+  reduceHours,
   setRerender,
   showLifePicker,
   startSpecificProfile,
@@ -189,6 +192,92 @@ describe('expense cuts and skill building', () => {
     expect(state.skill).toBe(beforeSkill + 1);
     expect(state.cash).toBe(beforeCash - 650);
     expect(state.time).toBe(beforeTime - 2);
+  });
+});
+
+describe('hours trade', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+  });
+
+  it('reduceHours drops 1 jobTime and income proportional to per-shift rate', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    const startingJobTime = state.profile!.jobTime;
+    const startingIncome = state.activeIncome;
+    const startingTime = state.time;
+    const expectedPerShift = perShiftIncome();
+
+    reduceHours();
+
+    expect(state.profile!.jobTime).toBe(startingJobTime - 1);
+    expect(state.activeIncome).toBe(startingIncome - expectedPerShift);
+    expect(state.time).toBe(startingTime + 1);
+  });
+
+  it('increaseHours raises 1 jobTime and income at current per-shift rate', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    const startingJobTime = state.profile!.jobTime;
+    const startingIncome = state.activeIncome;
+    const expectedPerShift = perShiftIncome();
+
+    increaseHours();
+
+    expect(state.profile!.jobTime).toBe(startingJobTime + 1);
+    expect(state.activeIncome).toBe(startingIncome + expectedPerShift);
+  });
+
+  it('refuses to reduce hours below the floor', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.profile!.jobTime = 1;
+    const before = state.activeIncome;
+
+    reduceHours();
+
+    expect(state.profile!.jobTime).toBe(1);
+    expect(state.activeIncome).toBe(before);
+  });
+
+  it('lets a single parent claw back free time by reducing hours', () => {
+    const nurse = profile('single-parent');
+    initializeRun(nurse, { status: 'single', kids: 2 }, 'test');
+    // jobTime 5, kids 2 × 3 = 6 obligated → capacity = 10 - 5 - 6 = -1 (clamped 0)
+    expect(state.time).toBe(0);
+
+    // First drop: capacity = 10 - 4 - 6 = 0, still pinned at 0.
+    reduceHours();
+    expect(state.profile!.jobTime).toBe(4);
+    expect(state.time).toBe(0);
+
+    // Second drop: capacity = 10 - 3 - 6 = 1, finally has a free unit.
+    reduceHours();
+    expect(state.profile!.jobTime).toBe(3);
+    expect(state.time).toBe(1);
+    expect(state.activeIncome).toBeLessThan(6100);
+  });
+});
+
+describe('single-parent kid time burden', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+  });
+
+  it('charges 3 time units per kid for a single parent (clamped at 0)', () => {
+    const nurse = profile('single-parent');
+    initializeRun(nurse, { status: 'single', kids: 2 }, 'test');
+    expect(state.family?.status).toBe('single');
+    expect(state.family?.kids).toBe(2);
+    expect(state.time).toBe(0);
+  });
+
+  it('charges 1.5 time units per kid for a married parent', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'married', kids: 2 }, 'test');
+    expect(state.family?.status).toBe('married');
+    expect(state.family?.kids).toBe(2);
+    expect(state.time).toBe(state.baseTime - state.profile!.jobTime - 3);
   });
 });
 

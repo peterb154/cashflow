@@ -6,9 +6,11 @@ import {
   buildSkill,
   continuePlay,
   cutExpenses,
+  increaseHours,
   nextMonth,
   passCard,
   payDebtSnowball,
+  reduceHours,
   resetGame,
   rollLife,
   sellAsset,
@@ -61,6 +63,8 @@ const actions: Record<string, Action> = {
   buildSkill: () => buildSkill(),
   sellAsset: () => sellAsset(),
   systematizeBusiness: () => systematizeBusiness(),
+  reduceHours: () => reduceHours(),
+  increaseHours: () => increaseHours(),
   resetGame: () => resetGame(),
   continuePlay: () => continuePlay(),
   showLifePicker: () => showLifePicker(),
@@ -102,6 +106,8 @@ declare global {
     buildSkill: () => void;
     sellAsset: () => void;
     systematizeBusiness: () => void;
+    reduceHours: () => void;
+    increaseHours: () => void;
     resetGame: () => void;
     setStatementTab: (tab: StatementTab) => void;
     render_game_to_text: () => string;
@@ -120,6 +126,8 @@ window.cutExpenses = cutExpenses;
 window.buildSkill = buildSkill;
 window.sellAsset = sellAsset;
 window.systematizeBusiness = systematizeBusiness;
+window.reduceHours = reduceHours;
+window.increaseHours = increaseHours;
 window.resetGame = resetGame;
 window.setStatementTab = setStatementTab;
 

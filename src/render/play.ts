@@ -1,9 +1,10 @@
-import { SKILL_BUILD_COST, SYSTEMATIZE_COST } from '../config';
+import { MIN_JOB_TIME, SKILL_BUILD_COST, SYSTEMATIZE_COST } from '../config';
 import {
   bestSellableAsset,
   bestSystematizeAsset,
   debtSnowballAmount,
   expenseCutAmount,
+  perShiftIncome,
 } from '../game';
 import { money, percent } from '../format';
 import {
@@ -162,6 +163,14 @@ function renderActions(): string {
         <button class="action-card" type="button" data-testid="button-systematize" data-action="systematizeBusiness">
           <strong>Systematize</strong>
           <span>${systemAsset ? `Spend ${money(SYSTEMATIZE_COST)} on ${systemAsset.name} to buy back 1 time unit/month.` : `Need a time-consuming asset first; systematizing buys back 1 time unit/month.`}</span>
+        </button>
+        <button class="action-card" type="button" data-testid="button-reduce-hours" data-action="reduceHours">
+          <strong>Reduce hours</strong>
+          <span>${state.profile && state.profile.jobTime > MIN_JOB_TIME ? `Drop 1 work unit. -${money(perShiftIncome())}/mo, +1 free time/mo from now on.` : 'Already at minimum work hours.'}</span>
+        </button>
+        <button class="action-card" type="button" data-testid="button-increase-hours" data-action="increaseHours">
+          <strong>Take more hours</strong>
+          <span>Add 1 work unit. +${money(perShiftIncome())}/mo, -1 free time/mo from now on.</span>
         </button>
       </div>
       <button class="primary-button" type="button" data-testid="button-next-month" data-action="nextMonth" ${hasCard ? 'disabled' : ''}>

@@ -13,7 +13,9 @@ export const EXPENSE_CUT_CAP = 350;
 export const FAMILY_KID_EXPENSE = 450;
 export const FAMILY_MARRIAGE_EXPENSE = 250;
 export const FAMILY_KID_TIME_MARRIED = 1.5;
-export const FAMILY_KID_TIME_SINGLE = 2;
+export const FAMILY_KID_TIME_SINGLE = 3;
+
+export const MIN_JOB_TIME = 1;
 
 export const TOAST_DURATION_MS = 3200;
 export const LOG_DISPLAY_LIMIT = 7;
