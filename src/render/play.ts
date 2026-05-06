@@ -39,7 +39,7 @@ function renderProfileHeader(): string {
     <div class="tag-row">
       <span class="tag primary">Business skill ${state.skill}/10</span>
       <span class="tag">Free time now ${state.time}/${state.baseTime}</span>
-      <span class="tag warning">Recurring obligations ${obligatedTime()}/10</span>
+      <span class="tag warning">Recurring obligations ${obligatedTime()}/${state.baseTime}</span>
       <span class="tag success">Family: ${familyLabel()}</span>
     </div>`;
 }
@@ -98,8 +98,8 @@ function renderTimeAccounting(): string {
         <strong>${state.time}/${state.baseTime} free units now</strong>
       </div>
       <div class="time-accounting-grid">
-        <span>Recurring obligations <strong>-${obligatedTime()}/10</strong></span>
-        <span>Starts free each month <strong>${monthlyTimeCapacity()}/10</strong></span>
+        <span>Recurring obligations <strong>-${obligatedTime()}/${state.baseTime}</strong></span>
+        <span>Starts free each month <strong>${monthlyTimeCapacity()}/${state.baseTime}</strong></span>
       </div>
       <div class="time-source-list">
         ${

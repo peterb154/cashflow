@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import {
+  acceptCard,
   backToIntro,
   buildSkill,
   cutExpenses,
@@ -385,6 +386,61 @@ describe('life picker', () => {
   it('startSpecificProfile falls back to the first profile for an unknown id', () => {
     startSpecificProfile('does-not-exist');
     expect(state.profile?.id).toBe(profiles[0].id);
+  });
+});
+
+describe('doodad timeChange', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+  });
+
+  it('persists across nextMonth (recurring effect, not one-shot)', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.cash = 5000;
+    const startBaseTime = state.baseTime;
+
+    state.currentCard = {
+      id: 'closer-apartment',
+      type: 'doodad',
+      title: 'Move closer to work',
+      description: '',
+      whisper: '',
+      cost: 0,
+      expenseChange: 0,
+      timeChange: 1,
+      happiness: 0,
+      lesson: '',
+    };
+    acceptCard();
+
+    expect(state.baseTime).toBe(startBaseTime + 1);
+
+    nextMonth();
+    expect(state.baseTime).toBe(startBaseTime + 1); // still bumped after a month
+  });
+
+  it('negative timeChange reduces baseTime permanently', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'single', kids: 0 }, 'test');
+    state.cash = 5000;
+    const startBaseTime = state.baseTime;
+
+    state.currentCard = {
+      id: 'pet-adoption',
+      type: 'doodad',
+      title: 'Adopt a dog',
+      description: '',
+      whisper: '',
+      cost: 0,
+      expenseChange: 0,
+      timeChange: -1,
+      happiness: 0,
+      lesson: '',
+    };
+    acceptCard();
+
+    expect(state.baseTime).toBe(startBaseTime - 1);
   });
 });
 

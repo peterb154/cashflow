@@ -58,8 +58,8 @@ function renderBalanceSheet(): string {
   rows.push(
     ['Total debt', `-${money(totalDebt())}`],
     ['Net worth', money(netWorth())],
-    ['Free time inventory', `${state.time}/10 units`],
-    ['Obligated time liability', `-${obligatedTime()}/10 units`],
+    ['Free time inventory', `${state.time}/${state.baseTime} units`],
+    ['Obligated time liability', `-${obligatedTime()}/${state.baseTime} units`],
     ['Business skill asset', `${state.skill}/10`],
   );
   return renderRows(rows);

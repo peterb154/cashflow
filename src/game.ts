@@ -327,6 +327,7 @@ export function acceptCard(): void {
     const netExpenseChange = (card.expenseChange ?? 0) - (card.expenseReduction ?? 0);
     state.expenses += netExpenseChange;
     if (card.timeChange) {
+      state.baseTime += card.timeChange;
       state.time = Math.max(0, Math.min(monthlyTimeCapacity(), state.time + card.timeChange));
     }
     state.totalDoodads += card.cost + netExpenseChange * 12;
