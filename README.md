@@ -36,4 +36,4 @@ Push to `main` → GitHub Actions runs tests, builds, and publishes to GitHub Pa
 
 - `CHANGELOG.md` — hand-curated player-facing changelog. Run `pnpm changelog:draft` to dump recent commits into `CHANGELOG.draft.md` (gitignored) as a reference when writing entries.
 - `CLAUDE.md` — architecture and conventions
-- `progress.md` — design intent and TODO list
+- Future design ideas → GitHub issues
