@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import {
+  backToIntro,
   buildSkill,
   cutExpenses,
   debtSnowballAmount,
@@ -9,6 +10,8 @@ import {
   nextMonth,
   payDebtSnowball,
   setRerender,
+  showLifePicker,
+  startSpecificProfile,
 } from '../game';
 import { profiles } from '../data/profiles';
 import {
@@ -186,6 +189,36 @@ describe('expense cuts and skill building', () => {
     expect(state.skill).toBe(beforeSkill + 1);
     expect(state.cash).toBe(beforeCash - 650);
     expect(state.time).toBe(beforeTime - 2);
+  });
+});
+
+describe('life picker', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+    state.phase = 'intro';
+  });
+
+  it('showLifePicker switches the phase to picking', () => {
+    showLifePicker();
+    expect(state.phase).toBe('picking');
+  });
+
+  it('backToIntro restores the intro phase', () => {
+    state.phase = 'picking';
+    backToIntro();
+    expect(state.phase).toBe('intro');
+  });
+
+  it('startSpecificProfile loads the requested profile by id', () => {
+    startSpecificProfile('barista');
+    expect(state.profile?.id).toBe('barista');
+    expect(state.profile?.name).toBe('Beauty School Dropout');
+    expect(state.phase).toBe('play');
+  });
+
+  it('startSpecificProfile falls back to the first profile for an unknown id', () => {
+    startSpecificProfile('does-not-exist');
+    expect(state.profile?.id).toBe(profiles[0].id);
   });
 });
 

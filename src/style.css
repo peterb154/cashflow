@@ -1006,3 +1006,113 @@ button:active {
     transition-duration: 0.01ms !important;
   }
 }
+
+.picker-screen {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-4) 0;
+}
+
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.picker-header h2 {
+  margin: var(--space-1) 0 var(--space-2);
+}
+
+.picker-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 720px) {
+  .picker-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .picker-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.picker-card {
+  background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.picker-card header {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.picker-name {
+  margin: 0;
+  font-family: var(--font-display, inherit);
+  font-size: var(--text-lg, 1.125rem);
+}
+
+.picker-role {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm, 0.875rem);
+}
+
+.picker-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.picker-stats div {
+  display: grid;
+  gap: 2px;
+}
+
+.picker-stats dt {
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--color-text-faint);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.picker-stats dd {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--text-sm, 0.875rem);
+}
+
+.picker-challenge,
+.picker-edge {
+  margin: 0;
+  font-size: var(--text-sm, 0.875rem);
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.picker-card .primary-button {
+  margin-top: var(--space-2);
+  justify-self: stretch;
+}

@@ -479,3 +479,13 @@ export function continuePlay(): void {
   state.phase = 'play';
   render();
 }
+
+export function showLifePicker(): void {
+  state.phase = 'picking';
+  render();
+}
+
+export function backToIntro(): void {
+  state.phase = 'intro';
+  render();
+}

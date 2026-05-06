@@ -2,6 +2,7 @@ import './style.css';
 
 import {
   acceptCard,
+  backToIntro,
   buildSkill,
   continuePlay,
   cutExpenses,
@@ -13,6 +14,7 @@ import {
   sellAsset,
   setRerender,
   setStatementTab,
+  showLifePicker,
   startSpecificProfile,
   systematizeBusiness,
 } from './game';
@@ -61,6 +63,8 @@ const actions: Record<string, Action> = {
   systematizeBusiness: () => systematizeBusiness(),
   resetGame: () => resetGame(),
   continuePlay: () => continuePlay(),
+  showLifePicker: () => showLifePicker(),
+  backToIntro: () => backToIntro(),
   setStatementTab: (arg) => {
     if (arg === 'income' || arg === 'balance' || arg === 'debt') {
       setStatementTab(arg satisfies StatementTab);

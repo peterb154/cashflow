@@ -1,7 +1,7 @@
 export type RiskLevel = 'Low' | 'Medium' | 'High';
 export type Sellability = 'Low' | 'Medium' | 'High';
 export type FamilyStatus = 'single' | 'married';
-export type Phase = 'intro' | 'play' | 'won';
+export type Phase = 'intro' | 'picking' | 'play' | 'won';
 export type StatementTab = 'income' | 'balance' | 'debt';
 export type CardType = 'opportunity' | 'doodad' | 'event' | 'exit';
 

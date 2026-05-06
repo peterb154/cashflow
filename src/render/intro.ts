@@ -12,6 +12,9 @@ export function renderIntro(): string {
           <button class="primary-button" type="button" data-testid="button-roll-life" data-action="rollLife">
             Roll my life
           </button>
+          <button class="secondary-button" type="button" data-testid="button-browse-lives" data-action="showLifePicker">
+            Browse lives
+          </button>
         </div>
       </section>
       <aside class="panel">
