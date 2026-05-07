@@ -355,32 +355,32 @@ export function renderLog(): string {
 
 export function renderPlay(): string {
   return `
-    <div class="screen">
-      <section class="panel profile-card" data-testid="section-profile">
-        ${renderProfileHeader()}
-        ${renderLifeLessons()}
-      </section>
-      <section class="panel financial-panel" data-testid="section-statements">
-        ${renderStats()}
-        ${renderTimeAccounting()}
-        ${renderStatements()}
-        ${renderFireProgress()}
-      </section>
-      <div class="mobile-only" data-testid="section-mobile-card">
-        <section class="panel">
-          ${renderCurrentCard(true)}
+    <div class="screen play-screen">
+      <div class="play-col play-col-left">
+        <section class="panel profile-card" data-testid="section-profile">
+          ${renderProfileHeader()}
+          ${renderLifeLessons()}
+        </section>
+        <section class="panel financial-panel" data-testid="section-statements">
+          ${renderStats()}
+          ${renderTimeAccounting()}
+          ${renderStatements()}
+          ${renderFireProgress()}
         </section>
       </div>
-      <div class="desktop-grid">
+      <div class="play-col play-col-right">
+        <div class="mobile-only" data-testid="section-mobile-card">
+          <section class="panel">
+            ${renderCurrentCard(true)}
+          </section>
+        </div>
         <section class="panel desktop-only" data-testid="section-monthly-card">
           ${renderCurrentCard()}
         </section>
-        <div class="turn-side-stack">
-          ${renderActions()}
-          <section class="panel" data-testid="section-log">
-            ${renderLog()}
-          </section>
-        </div>
+        ${renderActions()}
+        <section class="panel" data-testid="section-log">
+          ${renderLog()}
+        </section>
       </div>
     </div>
     <div class="mobile-bottom-space"></div>`;
