@@ -847,6 +847,45 @@ button:active {
   font-size: var(--text-sm);
 }
 
+.log-accordion > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.log-accordion > summary::-webkit-details-marker {
+  display: none;
+}
+
+.log-summary-title {
+  min-width: 0;
+}
+
+.log-summary-headline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.3;
+}
+
+.log-summary-chevron {
+  flex: 0 0 auto;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  transition: transform var(--transition-interactive);
+}
+
+.log-accordion[open] > summary .log-summary-chevron {
+  transform: rotate(180deg);
+}
+
 .recap-card {
   padding: var(--space-5);
   display: grid;

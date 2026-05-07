@@ -340,17 +340,24 @@ function renderCurrentCard(compact = false): string {
 }
 
 export function renderLog(): string {
+  const headline = state.log[0] ?? 'No events yet — close a month to start.';
+  const count = state.log.length;
   return `
-    <div class="panel-title">
-      <span class="eyebrow">Game log</span>
-      <h2>Cause and effect</h2>
-    </div>
-    <div class="log-list">
-      ${state.log
-        .slice(0, 7)
-        .map((entry, index) => `<div class="log-item" data-testid="text-log-${index}">${entry}</div>`)
-        .join('')}
-    </div>`;
+    <details class="panel log-accordion" data-testid="section-log">
+      <summary class="log-summary">
+        <div class="panel-title log-summary-title">
+          <span class="eyebrow">Game log${count ? ` · ${count}` : ''}</span>
+          <span class="log-summary-headline" data-testid="text-log-headline">${headline}</span>
+        </div>
+        <span class="log-summary-chevron" aria-hidden="true">▾</span>
+      </summary>
+      <div class="log-list">
+        ${state.log
+          .slice(0, 7)
+          .map((entry, index) => `<div class="log-item" data-testid="text-log-${index}">${entry}</div>`)
+          .join('')}
+      </div>
+    </details>`;
 }
 
 export function renderPlay(): string {
@@ -378,9 +385,7 @@ export function renderPlay(): string {
           ${renderCurrentCard()}
         </section>
         ${renderActions()}
-        <section class="panel" data-testid="section-log">
-          ${renderLog()}
-        </section>
+        ${renderLog()}
       </div>
     </div>
     <div class="mobile-bottom-space"></div>`;
