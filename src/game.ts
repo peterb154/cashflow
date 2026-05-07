@@ -28,7 +28,7 @@ import { familyStarts } from './data/family-starts';
 import { opportunities } from './data/opportunities';
 import { profiles } from './data/profiles';
 import { money } from './format';
-import { random, randomFrom } from './rng';
+import { random, randomFrom, seedInUse } from './rng';
 import {
   cloneProfile,
   familyExpense,
@@ -152,6 +152,11 @@ export function initializeRun(
   state.skill = profile.skill;
   state.baseTime = STARTING_TIME;
   state.time = monthlyTimeCapacity();
+  state.runStart = {
+    profile: cloneProfile(profile),
+    family: { ...state.family },
+    seed: seedInUse,
+  };
   state.currentCard = drawCard();
   state.phase = 'play';
   state.log = [
@@ -697,8 +702,52 @@ export function closeAssetPicker(): void {
 export function resetGame(): void {
   state.phase = 'intro';
   state.profile = null;
+  state.runStart = null;
   state.toast = null;
   render();
+}
+
+function familyLine(family: Family): string {
+  if (family.status === 'married') {
+    return `Married, ${family.kids} kid${family.kids === 1 ? '' : 's'}`;
+  }
+  if (family.kids > 0) {
+    return `Single parent, ${family.kids} kid${family.kids === 1 ? '' : 's'}`;
+  }
+  return 'Single';
+}
+
+export function buildShareText(): string {
+  if (!state.runStart) return '';
+  const { profile, family, seed } = state.runStart;
+  const debt = profile.debts.reduce((sum, d) => sum + d.balance, 0);
+  const url =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}${seed !== null ? `?seed=${seed}` : ''}`
+      : 'https://cashflow.epetersons.com/';
+  const debtLine = debt > 0 ? ` · ${money(debt)} debt` : '';
+  return `Beat Cashflow in month ${state.month}!
+
+Started: ${profile.name}
+${familyLine(family)} · ${money(profile.cash)} cash · ${money(profile.activeIncome)}/mo income · ${money(profile.expenses)}/mo expenses${debtLine}
+
+Finished: ${money(state.cash)} cash · ${money(truePassiveIncome())}/mo passive (covers ${money(state.expenses)}/mo expenses)
+
+Play: ${url}`;
+}
+
+export async function copyShareText(): Promise<void> {
+  const text = buildShareText();
+  if (!text) {
+    showToast('Nothing to share', 'Win the game first.');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Copied recap', 'Paste anywhere — link replays your starting roll if seeded.');
+  } catch {
+    showToast('Copy blocked', 'Browser denied clipboard access. Select and copy the recap manually.');
+  }
 }
 
 export function setStatementTab(tab: 'income' | 'balance' | 'debt'): void {

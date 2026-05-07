@@ -151,6 +151,12 @@ export interface LastMonth {
   cashFlow: number;
 }
 
+export interface RunStart {
+  profile: Profile;
+  family: Family;
+  seed: number | null;
+}
+
 export interface GameState {
   phase: Phase;
   profile: Profile | null;
@@ -176,5 +182,6 @@ export interface GameState {
   gameWon: boolean;
   actionTakenThisMonth: MonthlyActionId | null;
   assetPickerMode: AssetPickerMode | null;
+  runStart: RunStart | null;
   pickerFamilies: Record<string, Family>;
 }

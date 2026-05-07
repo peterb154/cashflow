@@ -24,6 +24,11 @@ What's changed in the game. New mechanics, balance shifts, and content additions
 - **Divorce now splits cash and every asset 50/50** with your spouse, on top of the existing legal fees and single-household premium. Walking out of a marriage was previously a slap on the wrist; now it's the largest single financial event in the game.
 - **Marital strain shifts marriage and divorce odds.** Two life signals — running at 0 free time and running monthly cash flow negative — each count as a strain factor. Each factor makes divorce more likely to draw and marriage less likely. Two factors at once roughly doubles divorce odds and quarters marriage odds. A new "Marriage at risk" / "Burnout — slower to meet someone" tag in the play header tells you when strain is active.
 
+### Win screen
+
+- **"Where you started" recap on the win screen.** When you reach FIRE, the victory page now shows your starting profile, family roll, cash, income, expenses, debt, and skill — so the journey from start to finish is legible.
+- **Copy recap button.** Pastes a short text summary (start → finish, plus the play URL — with seed when one was set) to your clipboard. Easy to share without taking a screenshot.
+
 ## 2026-05-06 — Initial public release
 
 The first playable version, live at [cashflow.epetersons.com](https://cashflow.epetersons.com/).

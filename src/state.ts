@@ -33,6 +33,7 @@ export const state: GameState = {
   gameWon: false,
   actionTakenThisMonth: null,
   assetPickerMode: null,
+  runStart: null,
   pickerFamilies: {},
 };
 

@@ -6,6 +6,7 @@ import {
   buildSkill,
   closeAssetPicker,
   continuePlay,
+  copyShareText,
   cutExpenses,
   increaseHours,
   nextMonth,
@@ -79,6 +80,9 @@ const actions: Record<string, Action> = {
     if (Number.isInteger(i)) systematizeAssetByIndex(i);
   },
   closeAssetPicker: () => closeAssetPicker(),
+  copyShareText: () => {
+    void copyShareText();
+  },
   reduceHours: () => reduceHours(),
   increaseHours: () => increaseHours(),
   resetGame: () => resetGame(),
