@@ -12,6 +12,7 @@ export type MonthlyActionId =
   | 'systematizeBusiness'
   | 'reduceHours'
   | 'increaseHours';
+export type AssetPickerMode = 'sell' | 'systematize';
 
 export interface Debt {
   name: string;
@@ -174,5 +175,6 @@ export interface GameState {
   expenseCuts: number;
   gameWon: boolean;
   actionTakenThisMonth: MonthlyActionId | null;
+  assetPickerMode: AssetPickerMode | null;
   pickerFamilies: Record<string, Family>;
 }

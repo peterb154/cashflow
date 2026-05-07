@@ -144,6 +144,7 @@ export function initializeRun(
   state.expenseCuts = 0;
   state.gameWon = false;
   state.actionTakenThisMonth = null;
+  state.assetPickerMode = null;
   state.lastMonth = null;
   showToast(
     logVerb,
@@ -229,6 +230,7 @@ export function nextMonth(): void {
   state.month += 1;
   state.time = monthlyTimeCapacity();
   state.actionTakenThisMonth = null;
+  state.assetPickerMode = null;
   state.currentCard = drawCard();
   state.lastMonth = {
     before,
@@ -275,6 +277,18 @@ export function bestSystematizeAsset(): Asset | null {
       .filter((asset) => (asset.recurringTime ?? 0) > 0)
       .sort((a, b) => (b.recurringTime ?? 0) - (a.recurringTime ?? 0))[0] ?? null
   );
+}
+
+export function sellableAssets(): { asset: Asset; index: number }[] {
+  return state.assets
+    .map((asset, index) => ({ asset, index }))
+    .filter((entry) => entry.asset.sellable);
+}
+
+export function systematizableAssets(): { asset: Asset; index: number }[] {
+  return state.assets
+    .map((asset, index) => ({ asset, index }))
+    .filter((entry) => (entry.asset.recurringTime ?? 0) > 0);
 }
 
 function applyFamilyEvent(card: EventCard): void {
@@ -512,17 +526,40 @@ export function buildSkill(): void {
 
 export function sellAsset(): void {
   if (!actionAvailable()) return;
-  const asset = bestSellableAsset();
-  if (!asset) {
+  const candidates = sellableAssets();
+  if (candidates.length === 0) {
     showToast('No sellable asset', 'Some assets create value but cannot be easily sold yet.');
     return;
   }
+  state.assetPickerMode = 'sell';
+  render();
+}
+
+export function sellAssetByIndex(index: number): void {
+  if (!actionAvailable()) return;
+  const asset = state.assets[index];
+  if (!asset || !asset.sellable) return;
+  commitSellAsset(asset);
+}
+
+function commitSellAsset(asset: Asset): void {
   consumeMonthlyAction('sellAsset');
+  const freed = asset.recurringTime ?? 0;
   state.cash += asset.value;
   state.passiveIncome = Math.max(0, state.passiveIncome - asset.passive);
   state.assets = state.assets.filter((item) => item !== asset);
-  state.log.unshift(`Sold ${asset.name} for ${money(asset.value)}. Passive income fell by ${money(asset.passive)}/mo.`);
-  showToast('Asset sold', 'Liquidity is useful, but selling cash-flow assets can move FIRE farther away.');
+  state.time = Math.min(monthlyTimeCapacity(), state.time + freed);
+  state.assetPickerMode = null;
+  const timeNote = freed > 0 ? `, freed ${freed} time/mo` : '';
+  state.log.unshift(
+    `Sold ${asset.name} for ${money(asset.value)}${timeNote}. Passive income fell by ${money(asset.passive)}/mo.`,
+  );
+  showToast(
+    'Asset sold',
+    freed > 0
+      ? `Freed ${freed} time/mo. Liquidity helps, but selling cash-flow assets moves FIRE farther away.`
+      : 'Liquidity is useful, but selling cash-flow assets can move FIRE farther away.',
+  );
   render();
 }
 
@@ -569,8 +606,8 @@ export function increaseHours(): void {
 }
 
 export function systematizeBusiness(): void {
-  const asset = bestSystematizeAsset();
-  if (!asset) {
+  const candidates = systematizableAssets();
+  if (candidates.length === 0) {
     showToast('Nothing to systematize', 'You need a time-consuming business before systems can buy back your calendar.');
     return;
   }
@@ -579,6 +616,22 @@ export function systematizeBusiness(): void {
     return;
   }
   if (!actionAvailable()) return;
+  state.assetPickerMode = 'systematize';
+  render();
+}
+
+export function systematizeAssetByIndex(index: number): void {
+  if (!canAfford(SYSTEMATIZE_COST)) {
+    showToast('Need cash', `Systems, delegation, or process cleanup costs ${money(SYSTEMATIZE_COST)}.`);
+    return;
+  }
+  if (!actionAvailable()) return;
+  const asset = state.assets[index];
+  if (!asset || (asset.recurringTime ?? 0) <= 0) return;
+  commitSystematize(asset);
+}
+
+function commitSystematize(asset: Asset): void {
   consumeMonthlyAction('systematizeBusiness');
   state.cash -= SYSTEMATIZE_COST;
   const wasActive = (asset.recurringTime ?? 0) > 0;
@@ -586,6 +639,7 @@ export function systematizeBusiness(): void {
   const justGraduated = wasActive && asset.recurringTime === 0;
   state.time = Math.min(monthlyTimeCapacity(), state.time + 1);
   asset.value += SYSTEMATIZE_VALUE_GAIN;
+  state.assetPickerMode = null;
   state.log.unshift(
     `Systematized ${asset.name}. Monthly time commitment fell by 1${justGraduated ? ` — now truly passive, ${money(asset.passive)}/mo counts toward FIRE` : ''}.`,
   );
@@ -595,6 +649,11 @@ export function systematizeBusiness(): void {
       ? `${asset.name} no longer needs your time — its ${money(asset.passive)}/mo counts toward FIRE.`
       : 'Systems turn a hustle into more of an asset.',
   );
+  render();
+}
+
+export function closeAssetPicker(): void {
+  state.assetPickerMode = null;
   render();
 }
 

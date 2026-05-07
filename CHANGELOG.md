@@ -2,6 +2,23 @@
 
 What's changed in the game. New mechanics, balance shifts, and content additions — written for players, not git.
 
+## 2026-05-07 — UI polish from playtest feedback
+
+### Layout
+
+- **Desktop play screen no longer requires scrolling.** Profile and financial panels live on the left; current card, monthly actions, and log on the right. Tighter density so it all fits in a typical desktop viewport. Mobile layout unchanged.
+- **Game log collapses by default.** Click the Game log header to expand it. The collapsed view shows your most recent entry, so it's still informative when closed.
+
+### Monthly actions
+
+- **Clearer feedback when an action fires.** The action you just took stays highlighted in green with "✓ Used this month"; the other six visibly dim with a "Locked until next month" message. No more guessing whether the click did anything.
+
+### Asset choices
+
+- **Pick which asset to sell.** Sell asset and Systematize now open a picker so you choose which side hustle to act on, instead of the game auto-picking. Easier to find when you're trying to free up time.
+- **Selling refunds freed time in the current month.** Selling a hustle with recurring time used to silently keep the time committed for the rest of the month — now it gives the hours back, matching the behavior of accepting an exit offer.
+- **Sell button leads with the time benefit** when the asset has recurring time obligations.
+
 ## 2026-05-06 — Initial public release
 
 The first playable version, live at [cashflow.epetersons.com](https://cashflow.epetersons.com/).

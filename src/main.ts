@@ -4,6 +4,7 @@ import {
   acceptCard,
   backToIntro,
   buildSkill,
+  closeAssetPicker,
   continuePlay,
   cutExpenses,
   increaseHours,
@@ -15,10 +16,12 @@ import {
   resetGame,
   rollLife,
   sellAsset,
+  sellAssetByIndex,
   setRerender,
   setStatementTab,
   showLifePicker,
   startSpecificProfile,
+  systematizeAssetByIndex,
   systematizeBusiness,
 } from './game';
 import { render } from './render';
@@ -66,7 +69,16 @@ const actions: Record<string, Action> = {
   cutExpenses: () => cutExpenses(),
   buildSkill: () => buildSkill(),
   sellAsset: () => sellAsset(),
+  sellAssetByIndex: (arg) => {
+    const i = Number.parseInt(arg ?? '', 10);
+    if (Number.isInteger(i)) sellAssetByIndex(i);
+  },
   systematizeBusiness: () => systematizeBusiness(),
+  systematizeAssetByIndex: (arg) => {
+    const i = Number.parseInt(arg ?? '', 10);
+    if (Number.isInteger(i)) systematizeAssetByIndex(i);
+  },
+  closeAssetPicker: () => closeAssetPicker(),
   reduceHours: () => reduceHours(),
   increaseHours: () => increaseHours(),
   resetGame: () => resetGame(),

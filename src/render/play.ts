@@ -5,6 +5,8 @@ import {
   debtSnowballAmount,
   expenseCutAmount,
   perShiftIncome,
+  sellableAssets,
+  systematizableAssets,
 } from '../game';
 import { money, percent } from '../format';
 import {
@@ -162,7 +164,56 @@ function renderActionButton(opts: {
         </button>`;
 }
 
+function renderAssetPicker(): string {
+  if (state.assetPickerMode === 'sell') {
+    const candidates = sellableAssets();
+    return `
+      <section class="panel asset-picker-panel" data-testid="section-asset-picker">
+        <div class="panel-title">
+          <span class="eyebrow">Sell which asset?</span>
+          <h2>Pick one to sell</h2>
+        </div>
+        <div class="asset-picker-list">
+          ${candidates
+            .map(({ asset, index }) => {
+              const freed = asset.recurringTime ?? 0;
+              const meta = freed > 0 ? `Frees ${freed} time/mo · ` : '';
+              return `<button class="asset-picker-card" type="button" data-action="sellAssetByIndex" data-arg="${index}" data-testid="picker-sell-${index}">
+                <strong>${asset.name}</strong>
+                <span>${meta}+${money(asset.value)} cash · lose ${money(asset.passive ?? 0)}/mo passive</span>
+              </button>`;
+            })
+            .join('')}
+        </div>
+        <button class="secondary-button" type="button" data-action="closeAssetPicker" data-testid="button-cancel-picker">Cancel</button>
+      </section>`;
+  }
+  const candidates = systematizableAssets();
+  return `
+    <section class="panel asset-picker-panel" data-testid="section-asset-picker">
+      <div class="panel-title">
+        <span class="eyebrow">Systematize which?</span>
+        <h2>${money(SYSTEMATIZE_COST)} buys back 1 time unit/mo</h2>
+      </div>
+      <div class="asset-picker-list">
+        ${candidates
+          .map(({ asset, index }) => {
+            const current = asset.recurringTime ?? 0;
+            const after = current - 1;
+            const graduates = after === 0 ? ' (becomes truly passive)' : '';
+            return `<button class="asset-picker-card" type="button" data-action="systematizeAssetByIndex" data-arg="${index}" data-testid="picker-systematize-${index}">
+              <strong>${asset.name}</strong>
+              <span>Currently ${current} time/mo → ${after} time/mo${graduates}</span>
+            </button>`;
+          })
+          .join('')}
+      </div>
+      <button class="secondary-button" type="button" data-action="closeAssetPicker" data-testid="button-cancel-picker">Cancel</button>
+    </section>`;
+}
+
 function renderActions(): string {
+  if (state.assetPickerMode) return renderAssetPicker();
   const hasCard = Boolean(state.currentCard);
   const snowball = debtSnowballAmount();
   const cut = expenseCutAmount();
@@ -194,14 +245,33 @@ function renderActions(): string {
   else if (state.time < 2) skillCopy = 'Costs 2 free time units — not enough free time right now.';
   else skillCopy = `Costs 2 time and ${money(SKILL_BUILD_COST)} to unlock better deal flow.`;
 
-  const sellCopy = sellableAsset
-    ? `Sell ${sellableAsset.name} for ${money(sellableAsset.value)}; lose ${money(sellableAsset.passive ?? 0)}/mo income.`
-    : 'No sellable asset on the balance sheet yet.';
+  let sellCopy: string;
+  if (!sellableAsset) {
+    sellCopy = 'No sellable asset on the balance sheet yet.';
+  } else {
+    const sellCount = sellableAssets().length;
+    if (sellCount > 1) {
+      sellCopy = `Pick one of ${sellCount} sellable assets to free up time or cash.`;
+    } else {
+      const freed = sellableAsset.recurringTime ?? 0;
+      const cashLine = `+${money(sellableAsset.value)} cash, lose ${money(sellableAsset.passive ?? 0)}/mo passive`;
+      sellCopy = freed > 0
+        ? `Sell ${sellableAsset.name}: frees ${freed} time/mo, ${cashLine}.`
+        : `Sell ${sellableAsset.name}: ${cashLine}.`;
+    }
+  }
 
   let systematizeCopy: string;
-  if (!systemAsset) systematizeCopy = 'Need a time-consuming asset first; systematizing buys back 1 time unit/month.';
-  else if (state.cash < SYSTEMATIZE_COST) systematizeCopy = `Costs ${money(SYSTEMATIZE_COST)} — not enough cash right now.`;
-  else systematizeCopy = `Spend ${money(SYSTEMATIZE_COST)} on ${systemAsset.name} to buy back 1 time unit/month.`;
+  if (!systemAsset) {
+    systematizeCopy = 'Need a time-consuming asset first; systematizing buys back 1 time unit/month.';
+  } else if (state.cash < SYSTEMATIZE_COST) {
+    systematizeCopy = `Costs ${money(SYSTEMATIZE_COST)} — not enough cash right now.`;
+  } else {
+    const sysCount = systematizableAssets().length;
+    systematizeCopy = sysCount > 1
+      ? `Spend ${money(SYSTEMATIZE_COST)} to free 1 time/mo from one of ${sysCount} hustles.`
+      : `Spend ${money(SYSTEMATIZE_COST)} on ${systemAsset.name} to buy back 1 time unit/month.`;
+  }
 
   const reduceCopy =
     state.profile && state.profile.jobTime > MIN_JOB_TIME
