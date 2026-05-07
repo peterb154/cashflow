@@ -1,6 +1,8 @@
 import {
   ASSET_TERMINAL_BOOK_VALUE_RATIO,
   CREDIT_CARD_RATE,
+  DIVORCE_BASE_PROB,
+  DIVORCE_STRAIN_BUMP,
   DOODAD_DRAW_THRESHOLD,
   EMERGENCY_BUFFER,
   EXIT_CARD_PROBABILITY,
@@ -8,6 +10,8 @@ import {
   EXIT_MARKET_FACTOR_RANGE,
   EXPENSE_CUT_CAP,
   EXPENSE_CUT_RATIO,
+  MARRIAGE_BASE_PROB,
+  MARRIAGE_STRAIN_PENALTY,
   MIN_EXPENSES_FLOOR,
   MIN_JOB_TIME,
   OPPORTUNITY_DRAW_THRESHOLD,
@@ -99,12 +103,28 @@ const SINGLE_NEW_BABY_PROB = 0.25;
 const MANY_KIDS_THRESHOLD = 3;
 const MANY_KIDS_NEW_BABY_PROB = 0.25;
 
+export function maritalStrainCount(): number {
+  let strain = 0;
+  if (state.time === 0) strain += 1;
+  if (monthlyCashFlow() < 0) strain += 1;
+  return strain;
+}
+
 function eligibleEvents(): EventCard[] {
   const married = state.family?.status === 'married';
   const kids = state.family?.kids ?? 0;
+  const strain = maritalStrainCount();
   return events.filter((event) => {
     if (event.familyAction === 'marry' && married) return false;
     if (event.familyAction === 'divorce' && !married) return false;
+    if (event.familyAction === 'divorce') {
+      const prob = Math.min(1, DIVORCE_BASE_PROB + DIVORCE_STRAIN_BUMP * strain);
+      if (random() > prob) return false;
+    }
+    if (event.familyAction === 'marry') {
+      const prob = Math.max(0, MARRIAGE_BASE_PROB - MARRIAGE_STRAIN_PENALTY * strain);
+      if (random() > prob) return false;
+    }
     if (event.familyAction === 'addKid') {
       let prob = 1;
       if (!married) prob *= SINGLE_NEW_BABY_PROB;

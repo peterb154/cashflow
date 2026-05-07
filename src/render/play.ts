@@ -4,6 +4,7 @@ import {
   bestSystematizeAsset,
   debtSnowballAmount,
   expenseCutAmount,
+  maritalStrainCount,
   perShiftIncome,
   sellableAssets,
   systematizableAssets,
@@ -29,6 +30,13 @@ import { renderStatements } from './statements';
 
 function renderProfileHeader(): string {
   if (!state.profile) return '';
+  const strain = maritalStrainCount();
+  let strainTag = '';
+  if (strain > 0) {
+    const married = state.family?.status === 'married';
+    const label = married ? 'Marriage at risk' : 'Burnout — slower to meet someone';
+    strainTag = `<span class="tag warning" data-testid="tag-marital-strain">${label} (${strain}/2)</span>`;
+  }
   return `
     <div class="profile-top">
       <div>
@@ -43,6 +51,7 @@ function renderProfileHeader(): string {
       <span class="tag">Free time now ${state.time}/${state.baseTime}</span>
       <span class="tag warning">Recurring obligations ${obligatedTime()}/10</span>
       <span class="tag success">Family: ${familyLabel()}</span>
+      ${strainTag}
     </div>`;
 }
 

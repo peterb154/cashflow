@@ -9,6 +9,7 @@ import {
   expenseCutAmount,
   increaseHours,
   initializeRun,
+  maritalStrainCount,
   nextMonth,
   payDebtSnowball,
   perShiftIncome,
@@ -337,6 +338,44 @@ describe('one action per month', () => {
 
     nextMonth();
     expect(state.actionTakenThisMonth).toBeNull();
+  });
+});
+
+describe('marital strain', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+  });
+
+  it('returns 0 when free time is positive and cash flow is positive', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'married', kids: 0 }, 'test');
+    state.time = 4;
+    // Developer has +$11,800 active income vs ~$9,400 + family expenses → cash flow positive.
+    expect(maritalStrainCount()).toBe(0);
+  });
+
+  it('counts a strain factor when free time hits 0', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'married', kids: 0 }, 'test');
+    state.time = 0;
+    state.expenses = 1; // ensure cash flow is positive so only the time factor counts
+    expect(maritalStrainCount()).toBe(1);
+  });
+
+  it('counts a strain factor when monthly cash flow is negative', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'married', kids: 0 }, 'test');
+    state.time = 5;
+    state.expenses = 50000; // crush cash flow
+    expect(maritalStrainCount()).toBe(1);
+  });
+
+  it('counts both factors when over-committed and cash-flow-negative', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'married', kids: 0 }, 'test');
+    state.time = 0;
+    state.expenses = 50000;
+    expect(maritalStrainCount()).toBe(2);
   });
 });
 

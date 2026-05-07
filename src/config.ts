@@ -29,3 +29,12 @@ export const EXIT_MARKET_FACTOR_RANGE = 0.35;
 
 export const ASSET_TERMINAL_BOOK_VALUE_RATIO = 0.12;
 export const SKILL_INCOME_BUMP = 250;
+
+// Marital strain — over-committed time and/or negative cash flow shifts
+// the probability that the divorce and marriage cards land. Each strain
+// factor (state.time === 0, monthlyCashFlow() < 0) shifts both:
+// divorce becomes more likely, marriage becomes less likely.
+export const DIVORCE_BASE_PROB = 0.4;
+export const DIVORCE_STRAIN_BUMP = 0.3;
+export const MARRIAGE_BASE_PROB = 1.0;
+export const MARRIAGE_STRAIN_PENALTY = 0.4;
