@@ -303,6 +303,7 @@ function applyFamilyEvent(card: EventCard): void {
   }
   if (card.familyAction === 'divorce') {
     state.family.status = 'single';
+    splitAssetsOnDivorce();
   }
   const timeDelta = familyTime() - beforeTime;
   const expenseDelta = familyExpense() - beforeExpense;
@@ -310,6 +311,22 @@ function applyFamilyEvent(card: EventCard): void {
   state.time = Math.min(state.time, monthlyTimeCapacity());
   state.log.unshift(
     `Family changed: ${familyLabel()}. Obligated time changed by ${timeDelta} and expenses changed by ${money(expenseDelta)}/mo.`,
+  );
+}
+
+function splitAssetsOnDivorce(): void {
+  const cashLost = state.cash - Math.floor(state.cash / 2);
+  state.cash -= cashLost;
+  const assetPassiveBefore = state.assets.reduce((sum, a) => sum + a.passive, 0);
+  for (const asset of state.assets) {
+    asset.value = Math.floor(asset.value / 2);
+    asset.passive = Math.floor(asset.passive / 2);
+  }
+  const assetPassiveAfter = state.assets.reduce((sum, a) => sum + a.passive, 0);
+  const passiveLost = assetPassiveBefore - assetPassiveAfter;
+  state.passiveIncome = Math.max(0, state.passiveIncome - passiveLost);
+  state.log.unshift(
+    `Divorce settlement: lost ${money(cashLost)} cash and ${money(passiveLost)}/mo of asset income (50/50 split).`,
   );
 }
 

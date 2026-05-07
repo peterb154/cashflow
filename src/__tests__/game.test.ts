@@ -17,6 +17,7 @@ import {
   showLifePicker,
   startSpecificProfile,
 } from '../game';
+import { events } from '../data/events';
 import { profiles } from '../data/profiles';
 import {
   cashInterestIncome,
@@ -336,6 +337,37 @@ describe('one action per month', () => {
 
     nextMonth();
     expect(state.actionTakenThisMonth).toBeNull();
+  });
+});
+
+describe('divorce splits assets', () => {
+  beforeEach(() => {
+    setRerender(() => {});
+  });
+
+  it('halves cash and every asset, then takes legal fees', () => {
+    const developer = profile('developer');
+    initializeRun(developer, { status: 'married', kids: 0 }, 'test');
+    state.cash = 10000;
+    state.assets = [
+      { name: 'Rental', value: 100000, passive: 600, sellable: true, recurringTime: 0 },
+      { name: 'Pet-sitting', value: 2000, passive: 200, sellable: true, recurringTime: 2 },
+    ];
+    state.passiveIncome = developer.passiveIncome + 800;
+
+    const divorceCard = events.find((e) => e.id === 'divorce')!;
+    state.currentCard = divorceCard;
+    acceptCard();
+
+    // Cash: 10000 → 5000 (split) → 5000 - 2500 (legal fee) = 2500.
+    expect(state.cash).toBe(2500);
+    expect(state.assets[0].value).toBe(50000);
+    expect(state.assets[0].passive).toBe(300);
+    expect(state.assets[1].value).toBe(1000);
+    expect(state.assets[1].passive).toBe(100);
+    // Lost 400 of asset-derived passive (half of 800).
+    expect(state.passiveIncome).toBe(developer.passiveIncome + 400);
+    expect(state.family?.status).toBe('single');
   });
 });
 

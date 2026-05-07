@@ -19,6 +19,10 @@ What's changed in the game. New mechanics, balance shifts, and content additions
 - **Selling refunds freed time in the current month.** Selling a hustle with recurring time used to silently keep the time committed for the rest of the month — now it gives the hours back, matching the behavior of accepting an exit offer.
 - **Sell button leads with the time benefit** when the asset has recurring time obligations.
 
+### Balance
+
+- **Divorce now splits cash and every asset 50/50** with your spouse, on top of the existing legal fees and single-household premium. Walking out of a marriage was previously a slap on the wrist; now it's the largest single financial event in the game.
+
 ## 2026-05-06 — Initial public release
 
 The first playable version, live at [cashflow.epetersons.com](https://cashflow.epetersons.com/).
