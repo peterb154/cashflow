@@ -31,7 +31,7 @@ export const state: GameState = {
   totalDebtPaid: 0,
   expenseCuts: 0,
   gameWon: false,
-  actionTakenThisMonth: false,
+  actionTakenThisMonth: null,
   pickerFamilies: {},
 };
 

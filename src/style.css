@@ -724,6 +724,22 @@ button:active {
   opacity: 0.48;
 }
 
+.action-card[data-state='fired'] {
+  opacity: 1;
+  border-color: var(--color-success);
+  background: var(--color-success-highlight);
+  color: var(--color-text);
+}
+
+.action-card[data-state='fired'] span {
+  color: var(--color-success);
+  font-weight: 800;
+}
+
+.action-card[data-state='locked'] {
+  opacity: 0.4;
+}
+
 .action-card strong {
   display: block;
   font-size: var(--text-sm);

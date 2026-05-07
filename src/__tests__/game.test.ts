@@ -315,7 +315,7 @@ describe('one action per month', () => {
     state.debts = [{ name: 'Card', balance: 800, payment: 30, rate: 0.2 }];
 
     payDebtSnowball();
-    expect(state.actionTakenThisMonth).toBe(true);
+    expect(state.actionTakenThisMonth).toBe('payDebtSnowball');
 
     const cashAfter = state.cash;
     const incomeAfter = state.activeIncome;
@@ -332,10 +332,10 @@ describe('one action per month', () => {
     state.debts = [{ name: 'Card', balance: 800, payment: 30, rate: 0.2 }];
 
     payDebtSnowball();
-    expect(state.actionTakenThisMonth).toBe(true);
+    expect(state.actionTakenThisMonth).toBe('payDebtSnowball');
 
     nextMonth();
-    expect(state.actionTakenThisMonth).toBe(false);
+    expect(state.actionTakenThisMonth).toBeNull();
   });
 });
 

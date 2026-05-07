@@ -4,6 +4,14 @@ export type FamilyStatus = 'single' | 'married';
 export type Phase = 'intro' | 'picking' | 'play' | 'won';
 export type StatementTab = 'income' | 'balance' | 'debt';
 export type CardType = 'opportunity' | 'doodad' | 'event' | 'exit';
+export type MonthlyActionId =
+  | 'payDebtSnowball'
+  | 'cutExpenses'
+  | 'buildSkill'
+  | 'sellAsset'
+  | 'systematizeBusiness'
+  | 'reduceHours'
+  | 'increaseHours';
 
 export interface Debt {
   name: string;
@@ -165,6 +173,6 @@ export interface GameState {
   totalDebtPaid: number;
   expenseCuts: number;
   gameWon: boolean;
-  actionTakenThisMonth: boolean;
+  actionTakenThisMonth: MonthlyActionId | null;
   pickerFamilies: Record<string, Family>;
 }

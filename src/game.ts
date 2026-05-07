@@ -36,7 +36,7 @@ import {
   state,
   truePassiveIncome,
 } from './state';
-import type { Asset, Card, EventCard, ExitCard, Family, Profile } from './types';
+import type { Asset, Card, EventCard, ExitCard, Family, MonthlyActionId, Profile } from './types';
 
 let rerender: () => void = () => {};
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
@@ -143,7 +143,7 @@ export function initializeRun(
   state.totalDebtPaid = 0;
   state.expenseCuts = 0;
   state.gameWon = false;
-  state.actionTakenThisMonth = false;
+  state.actionTakenThisMonth = null;
   state.lastMonth = null;
   showToast(
     logVerb,
@@ -228,7 +228,7 @@ export function nextMonth(): void {
   }
   state.month += 1;
   state.time = monthlyTimeCapacity();
-  state.actionTakenThisMonth = false;
+  state.actionTakenThisMonth = null;
   state.currentCard = drawCard();
   state.lastMonth = {
     before,
@@ -426,7 +426,7 @@ export function payDebtSnowball(): void {
     showToast('Keep the buffer', `Debt snowball uses all cash above a ${money(EMERGENCY_BUFFER)} emergency buffer. You have nothing extra right now.`);
     return;
   }
-  consumeMonthlyAction();
+  consumeMonthlyAction('payDebtSnowball');
   state.cash -= amount;
   target.balance = Math.max(0, target.balance - amount);
   state.totalDebtPaid += amount;
@@ -452,7 +452,7 @@ function spendTime(amount: number, label: string): boolean {
 }
 
 function actionAvailable(): boolean {
-  if (state.actionTakenThisMonth) {
+  if (state.actionTakenThisMonth !== null) {
     showToast(
       'One action per month',
       'You\'ve already used this month\'s action. Close the month to take another.',
@@ -462,8 +462,8 @@ function actionAvailable(): boolean {
   return true;
 }
 
-function consumeMonthlyAction(): void {
-  state.actionTakenThisMonth = true;
+function consumeMonthlyAction(action: MonthlyActionId): void {
+  state.actionTakenThisMonth = action;
 }
 
 export function cutExpenses(): void {
@@ -475,7 +475,7 @@ export function cutExpenses(): void {
     showToast('No more easy cuts', 'Your living expenses are already at the minimum floor.');
     return;
   }
-  consumeMonthlyAction();
+  consumeMonthlyAction('cutExpenses');
   state.expenses = Math.max(MIN_EXPENSES_FLOOR, state.expenses - cut);
   state.assets.push({
     name: 'DIY expense cuts',
@@ -499,7 +499,7 @@ export function buildSkill(): void {
     showToast('Need cash', `Skill-building costs ${money(SKILL_BUILD_COST)} this month.`);
     return;
   }
-  consumeMonthlyAction();
+  consumeMonthlyAction('buildSkill');
   state.cash -= SKILL_BUILD_COST;
   state.skill = Math.min(10, state.skill + 1);
   if (state.skill % 2 === 0) {
@@ -517,7 +517,7 @@ export function sellAsset(): void {
     showToast('No sellable asset', 'Some assets create value but cannot be easily sold yet.');
     return;
   }
-  consumeMonthlyAction();
+  consumeMonthlyAction('sellAsset');
   state.cash += asset.value;
   state.passiveIncome = Math.max(0, state.passiveIncome - asset.passive);
   state.assets = state.assets.filter((item) => item !== asset);
@@ -538,7 +538,7 @@ export function reduceHours(): void {
     return;
   }
   if (!actionAvailable()) return;
-  consumeMonthlyAction();
+  consumeMonthlyAction('reduceHours');
   const perShift = perShiftIncome();
   state.profile.jobTime -= 1;
   state.activeIncome = Math.max(0, state.activeIncome - perShift);
@@ -556,7 +556,7 @@ export function reduceHours(): void {
 export function increaseHours(): void {
   if (!state.profile) return;
   if (!actionAvailable()) return;
-  consumeMonthlyAction();
+  consumeMonthlyAction('increaseHours');
   const perShift = perShiftIncome();
   state.profile.jobTime += 1;
   state.activeIncome += perShift;
@@ -579,7 +579,7 @@ export function systematizeBusiness(): void {
     return;
   }
   if (!actionAvailable()) return;
-  consumeMonthlyAction();
+  consumeMonthlyAction('systematizeBusiness');
   state.cash -= SYSTEMATIZE_COST;
   const wasActive = (asset.recurringTime ?? 0) > 0;
   asset.recurringTime = Math.max(0, (asset.recurringTime ?? 0) - 1);
